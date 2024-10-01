@@ -1,0 +1,46 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
+import { SalespersonsService } from './salespersons.service';
+import { CreateSalespersonDto } from './dto/create-salesperson.dto';
+import { UpdateSalespersonDto } from './dto/update-salesperson.dto';
+import { UUID } from 'crypto';
+
+@Controller('salespersons')
+export class SalespersonsController {
+  constructor(private readonly salespersonsService: SalespersonsService) {}
+
+  @Post()
+  create(@Body() createSalespersonDto: CreateSalespersonDto) {
+    return this.salespersonsService.create(createSalespersonDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.salespersonsService.findAll();
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: UUID) {
+    return this.salespersonsService.findSalesPersonByIdOne(id);
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body() updateSalespersonDto: UpdateSalespersonDto,
+  ) {
+    return this.salespersonsService.update(+id, updateSalespersonDto);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.salespersonsService.remove(+id);
+  }
+}

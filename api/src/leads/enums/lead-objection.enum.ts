@@ -1,0 +1,7 @@
+export enum LeadObjections {
+  INDECISO = 'INDECISO',
+  PRODUTO_EM_FALTA = 'PRODUTO_EM_FALTA',
+  NAO_RESPONDEU = 'NAO_RESPONDEU',
+  NENHUMA = 'NENHUMA',
+  PRECO = 'PRECO',
+}
