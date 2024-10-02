@@ -22,11 +22,11 @@ export class Lead {
   @Column('text')
   whatsapp: string;
 
-  @Column('boolean')
-  seeAds: Boolean;
+  // @Column('boolean')
+  // seeAds: Boolean;
 
-  @Column('boolean')
-  becameCustomer: Boolean;
+  // @Column('boolean')
+  // becameCustomer: Boolean;
 
   @ManyToOne(() => SalesPerson, (salesPerson) => salesPerson.leads)
   salesPerson: SalesPerson;

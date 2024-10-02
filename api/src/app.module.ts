@@ -7,6 +7,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CustomerService } from './customer-services/entities/customer-service.entity';
 import { SalesPerson } from './salespersons/entities/salesperson.entity';
 import { Lead } from './leads/entities/lead.entity';
+import { ProductsModule } from './products/products.module';
+import { Product } from './products/entities/product.entity';
 
 @Module({
   imports: [
@@ -17,12 +19,13 @@ import { Lead } from './leads/entities/lead.entity';
       username: 'postgres',
       password: 'postgres',
       database: 'test',
-      entities: [CustomerService, SalesPerson, Lead],
+      entities: [CustomerService, SalesPerson, Lead, Product],
       synchronize: true,
     }),
     LeadsModule,
     SalespersonsModule,
     CustomerServicesModule,
+    ProductsModule,
   ],
   controllers: [],
   providers: [],

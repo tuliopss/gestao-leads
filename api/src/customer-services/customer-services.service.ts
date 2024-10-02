@@ -11,6 +11,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { NotFoundError } from 'rxjs';
 import { LeadsService } from 'src/leads/leads.service';
 import { SalespersonsService } from 'src/salespersons/salespersons.service';
+import { LeadObjections } from 'src/leads/enums/lead-objection.enum';
+import { ProductsService } from 'src/products/products.service';
+import { ProductSegments } from 'src/products/enums/product-segment.enum';
 
 @Injectable()
 export class CustomerServicesService {
@@ -18,6 +21,7 @@ export class CustomerServicesService {
     @InjectRepository(CustomerService)
     private readonly serviceRepository: Repository<CustomerService>,
     private readonly leadService: LeadsService,
+    private readonly productService: ProductsService,
     private readonly salesPersonService: SalespersonsService,
   ) {}
 
@@ -31,21 +35,30 @@ export class CustomerServicesService {
       const salesPerson = await this.salesPersonService.findSalesPersonByIdOne(
         createCustomerServiceDto.salesPersonId,
       );
+
+      // const productSegment = await this.productService.findProductSegmentById(
+      //   createCustomerServiceDto.productSegmentId,
+      // );
+      createCustomerServiceDto.productSegments = [];
+      createCustomerServiceDto.productSegments = await Promise.all(
+        createCustomerServiceDto.productSegmentsId.map(async (segment) => {
+          return this.productService.findProductSegmentById(segment);
+        }),
+      );
+
       createCustomerServiceDto.salesPerson = salesPerson;
       createCustomerServiceDto.lead = lead;
-
       const attendace = this.serviceRepository.create(createCustomerServiceDto);
-
-      if (attendace.leadObjection === 'NENHUMA' && !attendace.valuePaid) {
+      if (attendace.becameCustomer && !attendace.valuePaid) {
         throw new BadRequestException('Insira o valor');
       }
 
-      attendace.valuePaid =
-        attendace.leadObjection === 'NENHUMA'
-          ? createCustomerServiceDto.valuePaid
-          : 0;
+      attendace.valuePaid = attendace.becameCustomer
+        ? createCustomerServiceDto.valuePaid
+        : 0;
 
-      if (attendace.valuePaid > 0) attendace.becameCustomer = true;
+      if (attendace.valuePaid > 0)
+        attendace.leadObjection = LeadObjections.NENHUMA;
 
       return await this.serviceRepository.save(attendace);
     } catch (error) {
@@ -56,7 +69,7 @@ export class CustomerServicesService {
   async getAllCustomersServices(): Promise<CustomerService[]> {
     try {
       const services = await this.serviceRepository.find({
-        relations: ['salesPerson', 'lead'],
+        relations: ['salesPerson', 'lead', 'productSegments'],
       });
 
       if (services.length === 0) {
