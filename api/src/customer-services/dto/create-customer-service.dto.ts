@@ -8,9 +8,9 @@ export class CreateCustomerServiceDto {
   salesPerson: SalesPerson;
   salesPersonId: UUID;
   seeAds: Boolean;
-  becameCustomer: Boolean;
+  becameCustomer: boolean;
   leadObjection: LeadObjections;
-  valuePaid?: Number;
+  valuePaid?: number;
   leadId: UUID;
   lead: Lead;
 }

@@ -28,8 +28,8 @@ export class CustomerService {
   @Column('boolean')
   seeAds: Boolean;
 
-  @Column('boolean')
-  becameCustomer: Boolean;
+  @Column('boolean', { default: false })
+  becameCustomer: boolean;
 
   @Column({
     type: 'enum',
@@ -37,6 +37,6 @@ export class CustomerService {
   })
   leadObjection: LeadObjections;
 
-  @Column('float')
-  valuePaid: Number;
+  @Column('float', { nullable: true })
+  valuePaid: number;
 }

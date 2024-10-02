@@ -28,16 +28,25 @@ export class CustomerServicesService {
       const lead = await this.leadService.findLeadById(
         createCustomerServiceDto.leadId,
       );
-
       const salesPerson = await this.salesPersonService.findSalesPersonByIdOne(
         createCustomerServiceDto.salesPersonId,
       );
-
       createCustomerServiceDto.salesPerson = salesPerson;
       createCustomerServiceDto.lead = lead;
 
       const attendace = this.serviceRepository.create(createCustomerServiceDto);
-      console.log(attendace);
+
+      if (attendace.leadObjection === 'NENHUMA' && !attendace.valuePaid) {
+        throw new BadRequestException('Insira o valor');
+      }
+
+      attendace.valuePaid =
+        attendace.leadObjection === 'NENHUMA'
+          ? createCustomerServiceDto.valuePaid
+          : 0;
+
+      if (attendace.valuePaid > 0) attendace.becameCustomer = true;
+
       return await this.serviceRepository.save(attendace);
     } catch (error) {
       throw new BadRequestException(error.message);
