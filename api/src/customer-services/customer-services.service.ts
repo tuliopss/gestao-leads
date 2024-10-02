@@ -23,21 +23,22 @@ export class CustomerServicesService {
 
   async create(
     createCustomerServiceDto: CreateCustomerServiceDto,
-  ): Promise<void> {
+  ): Promise<CustomerService> {
     try {
-      // const lead = await this.leadService.findLeadById(
-      //   createCustomerServiceDto.leadId,
-      // );
+      const lead = await this.leadService.findLeadById(
+        createCustomerServiceDto.leadId,
+      );
 
       const salesPerson = await this.salesPersonService.findSalesPersonByIdOne(
         createCustomerServiceDto.salesPersonId,
       );
 
       createCustomerServiceDto.salesPerson = salesPerson;
-      // createCustomerServiceDto.lead = lead;
+      createCustomerServiceDto.lead = lead;
 
       const attendace = this.serviceRepository.create(createCustomerServiceDto);
-      await this.serviceRepository.save(attendace);
+      console.log(attendace);
+      return await this.serviceRepository.save(attendace);
     } catch (error) {
       throw new BadRequestException(error.message);
     }
@@ -46,7 +47,7 @@ export class CustomerServicesService {
   async getAllCustomersServices(): Promise<CustomerService[]> {
     try {
       const services = await this.serviceRepository.find({
-        relations: ['salesPerson'],
+        relations: ['salesPerson', 'lead'],
       });
 
       if (services.length === 0) {

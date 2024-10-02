@@ -23,7 +23,7 @@ export class SalesPerson {
   @Column('text')
   password: string;
 
-  @OneToMany(() => Lead, (lead) => lead.id)
+  @OneToMany(() => Lead, (lead) => lead.salesPerson)
   leads: Lead[];
 
   @OneToMany(

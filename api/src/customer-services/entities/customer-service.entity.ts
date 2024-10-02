@@ -22,7 +22,7 @@ export class CustomerService {
   @ManyToOne(() => SalesPerson, (salesPerson) => salesPerson.id)
   salesPerson: SalesPerson;
 
-  @OneToOne(() => Lead, (lead) => lead.id)
+  @ManyToOne(() => Lead, (lead) => lead.customerService)
   lead: Lead;
 
   @Column('boolean')

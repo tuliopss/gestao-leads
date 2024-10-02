@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -30,6 +31,6 @@ export class Lead {
   @ManyToOne(() => SalesPerson, (salesPerson) => salesPerson.leads)
   salesPerson: SalesPerson;
 
-  @OneToOne(() => CustomerService, (customerService) => customerService.lead)
+  @OneToMany(() => CustomerService, (customerService) => customerService.lead)
   customerService: CustomerService;
 }

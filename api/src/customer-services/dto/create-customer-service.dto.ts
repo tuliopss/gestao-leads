@@ -11,6 +11,6 @@ export class CreateCustomerServiceDto {
   becameCustomer: Boolean;
   leadObjection: LeadObjections;
   valuePaid?: Number;
-  // leadId: UUID;
-  // lead: Lead;
+  leadId: UUID;
+  lead: Lead;
 }

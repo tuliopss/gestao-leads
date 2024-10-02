@@ -20,19 +20,26 @@ export class SalespersonsService {
   async create(createSalespersonDto: CreateSalespersonDto) {
     try {
       return await this.salesPersonRepository.save(createSalespersonDto);
-    } catch (error) {}
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   async findAll(): Promise<SalesPerson[]> {
-    const salespersons = await this.salesPersonRepository.find({
-      relations: ['customerServices'],
-    });
-    if (salespersons.length === 0) {
-      throw new NotFoundException(
-        'Não foram encontrados atendentes registrados...',
-      );
+    try {
+      const salespersons = await this.salesPersonRepository.find({
+        relations: ['customerServices', 'leads'],
+      });
+
+      if (salespersons.length === 0) {
+        throw new NotFoundException(
+          'Não foram encontrados atendentes registrados...',
+        );
+      }
+      return salespersons;
+    } catch (error) {
+      throw new BadRequestException(error.message);
     }
-    return salespersons;
   }
 
   async findSalesPersonByIdOne(id: UUID): Promise<SalesPerson> {
@@ -45,7 +52,9 @@ export class SalespersonsService {
       }
 
       return salesperson;
-    } catch (error) {}
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   async update(id: UUID, updateSalespersonDto: UpdateSalespersonDto) {
