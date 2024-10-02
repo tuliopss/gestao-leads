@@ -14,6 +14,7 @@ import { SalespersonsService } from 'src/salespersons/salespersons.service';
 import { LeadObjections } from 'src/leads/enums/lead-objection.enum';
 import { ProductsService } from 'src/products/products.service';
 import { ProductSegments } from 'src/products/enums/product-segment.enum';
+import { UUID } from 'crypto';
 
 @Injectable()
 export class CustomerServicesService {
@@ -36,9 +37,6 @@ export class CustomerServicesService {
         createCustomerServiceDto.salesPersonId,
       );
 
-      // const productSegment = await this.productService.findProductSegmentById(
-      //   createCustomerServiceDto.productSegmentId,
-      // );
       createCustomerServiceDto.productSegments = [];
       createCustomerServiceDto.productSegments = await Promise.all(
         createCustomerServiceDto.productSegmentsId.map(async (segment) => {
@@ -48,6 +46,7 @@ export class CustomerServicesService {
 
       createCustomerServiceDto.salesPerson = salesPerson;
       createCustomerServiceDto.lead = lead;
+
       const attendace = this.serviceRepository.create(createCustomerServiceDto);
       if (attendace.becameCustomer && !attendace.valuePaid) {
         throw new BadRequestException('Insira o valor');
@@ -84,15 +83,36 @@ export class CustomerServicesService {
     }
   }
   //: Promise<CustomerService>
-  findOne(id: number) {
-    return `This action returns a #${id} customerService`;
+  async findServiceById(id: UUID): Promise<CustomerService> {
+    try {
+      const customerService = await this.serviceRepository.findOne({
+        where: { id },
+        relations: ['lead', 'salesPerson', 'productSegments'],
+      });
+
+      if (!customerService) {
+        throw new NotFoundException('Atendimento não encontrado');
+      }
+
+      return customerService;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   update(id: number, updateCustomerServiceDto: UpdateCustomerServiceDto) {
     return `This action updates a #${id} customerService`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} customerService`;
+  async deleteCustomerServiceById(id: UUID) {
+    try {
+      await this.findServiceById(id);
+
+      await this.serviceRepository.delete(id);
+
+      return { message: 'Atendimento excluído.' };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 }

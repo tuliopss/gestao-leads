@@ -6,10 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  ValidationPipe,
+  UsePipes,
 } from '@nestjs/common';
 import { CustomerServicesService } from './customer-services.service';
 import { CreateCustomerServiceDto } from './dto/create-customer-service.dto';
 import { UpdateCustomerServiceDto } from './dto/update-customer-service.dto';
+import { UUID } from 'crypto';
 
 @Controller('customer-services')
 export class CustomerServicesController {
@@ -18,6 +21,7 @@ export class CustomerServicesController {
   ) {}
 
   @Post()
+  @UsePipes(ValidationPipe)
   async create(@Body() createCustomerServiceDto: CreateCustomerServiceDto) {
     return await this.customerServicesService.create(createCustomerServiceDto);
   }
@@ -28,8 +32,8 @@ export class CustomerServicesController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.customerServicesService.findOne(+id);
+  findOne(@Param('id') id: UUID) {
+    return this.customerServicesService.findServiceById(id);
   }
 
   @Patch(':id')
@@ -41,7 +45,7 @@ export class CustomerServicesController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.customerServicesService.remove(+id);
+  remove(@Param('id') id: UUID) {
+    return this.customerServicesService.deleteCustomerServiceById(id);
   }
 }

@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { LeadsService } from './leads.service';
 import { CreateLeadDto } from './dto/create-lead.dto';
@@ -17,6 +19,7 @@ export class LeadsController {
   constructor(private readonly leadsService: LeadsService) {}
 
   @Post()
+  @UsePipes(ValidationPipe)
   createLead(@Body() createLeadDto: CreateLeadDto) {
     return this.leadsService.createLead(createLeadDto);
   }

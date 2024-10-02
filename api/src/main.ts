@@ -8,7 +8,7 @@ async function bootstrap() {
       .tz('America/Sao_Paulo')
       .format('DD-MM-YYYY HH:mm:ss');
   };
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
   await app.listen(3000);
 }
 bootstrap();
