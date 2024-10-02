@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateSalespersonDto } from './dto/create-salesperson.dto';
 import { UpdateSalespersonDto } from './dto/update-salesperson.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -20,7 +24,9 @@ export class SalespersonsService {
   }
 
   async findAll(): Promise<SalesPerson[]> {
-    const salespersons = await this.salesPersonRepository.find();
+    const salespersons = await this.salesPersonRepository.find({
+      relations: ['customerServices'],
+    });
     if (salespersons.length === 0) {
       throw new NotFoundException(
         'Não foram encontrados atendentes registrados...',
@@ -42,8 +48,16 @@ export class SalespersonsService {
     } catch (error) {}
   }
 
-  update(id: number, updateSalespersonDto: UpdateSalespersonDto) {
-    return `This action updates a #${id} salesperson`;
+  async update(id: UUID, updateSalespersonDto: UpdateSalespersonDto) {
+    try {
+      await this.findSalesPersonByIdOne(id);
+
+      await this.salesPersonRepository.update(id, updateSalespersonDto);
+
+      return `Atendente com o id "${id}" foi atualizado.`;
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   remove(id: number) {

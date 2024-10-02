@@ -26,7 +26,7 @@ export class SalesPerson {
   @OneToMany(() => Lead, (lead) => lead.id)
   leads: Lead[];
 
-  @ManyToOne(
+  @OneToMany(
     () => CustomerService,
     (customerService) => customerService.salesPerson,
   )

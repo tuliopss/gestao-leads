@@ -33,10 +33,10 @@ export class SalespersonsController {
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
+    @Param('id') id: UUID,
     @Body() updateSalespersonDto: UpdateSalespersonDto,
   ) {
-    return this.salespersonsService.update(+id, updateSalespersonDto);
+    return this.salespersonsService.update(id, updateSalespersonDto);
   }
 
   @Delete(':id')
