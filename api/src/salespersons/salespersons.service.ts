@@ -30,7 +30,7 @@ export class SalespersonsService {
   async findAll(): Promise<SalesPerson[]> {
     try {
       const salespersons = await this.salesPersonRepository.find({
-        relations: ['customerServices', 'leads'],
+        relations: ['customerServices', 'leads', 'customerServices.lead'],
       });
 
       if (salespersons.length === 0) {
@@ -48,7 +48,7 @@ export class SalespersonsService {
     try {
       const salesperson = await this.salesPersonRepository.findOne({
         where: { id: id },
-        relations: ['leads'],
+        relations: ['leads', 'customerServices'],
       });
       if (!salesperson) {
         throw new NotFoundException('Atendente não encontrado...');

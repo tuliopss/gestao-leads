@@ -28,6 +28,7 @@ function createData(name, calories, fat, carbs, protein, price) {
         customerId: "11091700",
         amount: 3,
       },
+
       {
         date: "2020-01-02",
         customerId: "Anonymous",
