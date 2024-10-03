@@ -42,7 +42,6 @@ export const registerSalesPerson = createAsyncThunk(
     const data = await salesPersonService.registerSalesPerson(salesPerson);
 
     if (data.error) {
-      console.log("ERROR", data.message);
       return thunkAPI.rejectWithValue(data.message[0]);
     }
 
@@ -57,6 +56,7 @@ export const salesPersonSlice = createSlice({
     resetMessage: (state) => {
       state.message = null;
       state.error = null;
+      state.success = false;
     },
   },
   extraReducers: (builder) => {
@@ -64,11 +64,12 @@ export const salesPersonSlice = createSlice({
       .addCase(getAllSalesPersons.pending, (state) => {
         state.loading = true;
         state.error = false;
+        state.success = false;
       })
       .addCase(getAllSalesPersons.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.error = null;
+        state.error = false;
         state.salesPersons = action.payload;
       })
       .addCase(registerSalesPerson.pending, (state) => {
@@ -85,10 +86,9 @@ export const salesPersonSlice = createSlice({
       .addCase(registerSalesPerson.rejected, (state, action) => {
         state.loading = false;
         state.error = true;
+        state.success = false;
 
-        // state.message = action.payload;
         state.message = action.payload;
-        console.log(action);
 
         state.salesPerson = {};
       });

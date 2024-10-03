@@ -3,9 +3,12 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 // import "./ModalAddSalesPerson.css";
-import { registerSalesPerson } from "../../salespersons/slices/salesperson-slice";
+import {
+  registerSalesPerson,
+  resetMessage,
+} from "../../salespersons/slices/salesperson-slice";
 import styles from "./ModalAddSalesPerson.module.css";
 import Message from "../Message/Message";
 
@@ -24,9 +27,9 @@ const style = {
 
 export default function ModalAddSalesPerson() {
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const dispatch = useDispatch();
 
   const initialProduct = {
     _id: "",
@@ -34,24 +37,26 @@ export default function ModalAddSalesPerson() {
     quantity: 1,
     price: 0,
   };
-  const { error, message } = useSelector((state) => state.salesPerson);
-  console.log(error);
+  const { error, message, success } = useSelector((state) => state.salesPerson);
   const [salesPerson, setSalesPerson] = useState({});
 
   const handleChange = (e) => {
     setSalesPerson({ ...salesPerson, [e.target.name]: e.target.value });
-    console.log(salesPerson);
   };
 
   const handleSubmit = (e) => {
     dispatch(registerSalesPerson(salesPerson));
-
-    // if (error) {
-    //   // handleOpen();
-    // }
+    console.log("error", error);
+    console.log("sucesso", success);
 
     e.preventDefault();
   };
+  useEffect(() => {
+    if (success) {
+      handleClose();
+      dispatch(resetMessage());
+    }
+  }, [success, dispatch, handleClose]);
 
   return (
     <div>
