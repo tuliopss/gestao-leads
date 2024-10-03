@@ -39,15 +39,14 @@ export class LeadsService {
 
   async findLeadById(id: UUID): Promise<Lead> {
     try {
-      const lead = await this.leadRepository.findOne({ where: { id: id } });
+      const lead = await this.leadRepository.findOne({ where: { id } });
       if (!lead) {
-        throw new NotFoundException(
-          'Não foram encontrados atendimentos registrados...',
-        );
+        throw new NotFoundException('Lead não encontrado...');
       }
-
       return lead;
-    } catch (error) {}
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   update(id: number, updateLeadDto: UpdateLeadDto) {

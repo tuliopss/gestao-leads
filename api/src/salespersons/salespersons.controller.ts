@@ -46,4 +46,15 @@ export class SalespersonsController {
   remove(@Param('id') id: UUID) {
     return this.salespersonsService.deleteSalesPerson(id);
   }
+
+  @Post('link-lead')
+  async linkLeadToSalesPerson(
+    @Body('salesPersonId') salesPersonId: UUID,
+    @Body('leadId') leadId: UUID,
+  ) {
+    return await this.salespersonsService.linkLeadToSalePerson(
+      salesPersonId,
+      leadId,
+    );
+  }
 }

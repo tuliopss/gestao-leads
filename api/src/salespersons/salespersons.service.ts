@@ -9,12 +9,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SalesPerson } from './entities/salesperson.entity';
 import { Repository } from 'typeorm';
 import { UUID } from 'crypto';
+import { LeadsService } from 'src/leads/leads.service';
 
 @Injectable()
 export class SalespersonsService {
   constructor(
     @InjectRepository(SalesPerson)
     private readonly salesPersonRepository: Repository<SalesPerson>,
+    private readonly leadService: LeadsService,
   ) {}
 
   async create(createSalespersonDto: CreateSalespersonDto) {
@@ -46,6 +48,7 @@ export class SalespersonsService {
     try {
       const salesperson = await this.salesPersonRepository.findOne({
         where: { id: id },
+        relations: ['leads'],
       });
       if (!salesperson) {
         throw new NotFoundException('Atendente não encontrado...');
@@ -76,6 +79,18 @@ export class SalespersonsService {
       await this.salesPersonRepository.delete(id);
 
       return { message: 'Atendente excluído.' };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async linkLeadToSalePerson(salesPersonId: UUID, leadId: UUID) {
+    try {
+      const salesPerson = await this.findSalesPersonByIdOne(salesPersonId);
+      const lead = await this.leadService.findLeadById(leadId);
+      salesPerson.leads.push(lead);
+      console.log(salesPersonId, leadId);
+      await this.salesPersonRepository.save(salesPerson);
     } catch (error) {
       throw new BadRequestException(error.message);
     }

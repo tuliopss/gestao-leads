@@ -33,6 +33,7 @@ export class CustomerServicesService {
       const lead = await this.leadService.findLeadById(
         createCustomerServiceDto.leadId,
       );
+      console.log(lead);
       const salesPerson = await this.salesPersonService.findSalesPersonByIdOne(
         createCustomerServiceDto.salesPersonId,
       );
@@ -48,6 +49,7 @@ export class CustomerServicesService {
       createCustomerServiceDto.lead = lead;
 
       const attendace = this.serviceRepository.create(createCustomerServiceDto);
+
       if (attendace.becameCustomer && !attendace.valuePaid) {
         throw new BadRequestException('Insira o valor');
       }
@@ -58,6 +60,11 @@ export class CustomerServicesService {
 
       if (attendace.valuePaid > 0)
         attendace.leadObjection = LeadObjections.NENHUMA;
+
+      await this.salesPersonService.linkLeadToSalePerson(
+        salesPerson.id,
+        lead.id,
+      );
 
       return await this.serviceRepository.save(attendace);
     } catch (error) {
