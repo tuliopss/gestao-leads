@@ -43,7 +43,7 @@ export class SalespersonsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.salespersonsService.remove(+id);
+  remove(@Param('id') id: UUID) {
+    return this.salespersonsService.deleteSalesPerson(id);
   }
 }

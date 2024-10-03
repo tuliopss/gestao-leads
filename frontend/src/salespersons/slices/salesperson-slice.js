@@ -14,7 +14,6 @@ export const getAllSalesPersons = createAsyncThunk(
   "salesPerson/getAll",
   async (_, thunkAPI) => {
     const data = await salesPersonService.getAllSalesPersons();
-    console.log("data", data);
 
     if (data.error) {
       return thunkAPI.rejectWithValue(data.error.message);

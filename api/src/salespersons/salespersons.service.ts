@@ -69,7 +69,15 @@ export class SalespersonsService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} salesperson`;
+  async deleteSalesPerson(id: UUID) {
+    try {
+      await this.findSalesPersonByIdOne(id);
+
+      await this.salesPersonRepository.delete(id);
+
+      return { message: 'Atendente excluído.' };
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 }
