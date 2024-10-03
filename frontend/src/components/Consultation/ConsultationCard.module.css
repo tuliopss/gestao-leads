@@ -1,0 +1,35 @@
+.consultationCard {
+  background-color: #f1f1f1;
+  color: #000;
+  font-size: 1em;
+  width: 30%;
+  margin-bottom: 1em;
+  padding: 0.1em 0.4em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 8px;
+}
+
+.sailed {
+  background-color: #159f03;
+}
+
+.noSailed {
+  background-color: #b80202;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* .productActions svg {
+  margin: 0.3em;
+  cursor: pointer;
+}
+
+.productActions {
+  display: flex;
+} */

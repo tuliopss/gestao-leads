@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { SalespersonsService } from './salespersons.service';
 import { CreateSalespersonDto } from './dto/create-salesperson.dto';
@@ -17,6 +19,7 @@ export class SalespersonsController {
   constructor(private readonly salespersonsService: SalespersonsService) {}
 
   @Post()
+  @UsePipes(ValidationPipe)
   create(@Body() createSalespersonDto: CreateSalespersonDto) {
     return this.salespersonsService.create(createSalespersonDto);
   }

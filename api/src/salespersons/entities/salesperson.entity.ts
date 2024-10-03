@@ -20,7 +20,7 @@ export class SalesPerson {
   @Column('text')
   email: string;
 
-  @Column('text')
+  @Column('text', { nullable: true })
   password: string;
 
   @OneToMany(() => Lead, (lead) => lead.salesPerson)
