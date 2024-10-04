@@ -5,6 +5,7 @@ import { Button } from "@mui/material";
 import styles from "./Home.module.css";
 import { getAllConsultations } from "../../customer-services/slices/consultation-slice";
 import ConsultationCard from "../../components/Consultation/ConsultationCard";
+import { Link } from "react-router-dom";
 const Home = () => {
   const dispatch = useDispatch();
   const { consultations } = useSelector((state) => state.consultation);
@@ -18,9 +19,11 @@ const Home = () => {
       <header className={styles.homeHeader}>
         <h1>Atendimentos:</h1>
 
-        <Button variant='contained' color='success'>
-          Criar novo atendentimento
-        </Button>
+        <Link to='/addConsultation'>
+          <Button variant='contained' color='success'>
+            Criar novo atendentimento
+          </Button>
+        </Link>
       </header>
 
       <div className={styles.ConsultationList}>

@@ -1,36 +1,22 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import leadsService from "../services/leads-service";
+import productsService from "../services/products-service";
 const initialState = {
-  lead: {},
-  leads: [],
+  product: {},
+  products: [],
   error: false,
   success: false,
   loading: false,
   message: null,
 };
 
-export const getAllLeads = createAsyncThunk(
-  "lead/getAll",
+export const getAllProducts = createAsyncThunk(
+  "product/getAll",
   async (_, thunkAPI) => {
-    const data = await leadsService.getAllLeads();
-    console.log("data", data);
+    const data = await productsService.getAllProducts();
 
     // if (data.error) {
     //   return thunkAPI.rejectWithValue(data.error.message);
     // }
-    return data;
-  }
-);
-
-export const createLead = createAsyncThunk(
-  "lead/create",
-  async (lead, thunkAPI) => {
-    const data = await leadsService.createLead(lead);
-
-    if (data.error) {
-      return thunkAPI.rejectWithValue(data.error.message);
-    }
-
     return data;
   }
 );
@@ -62,8 +48,8 @@ export const createLead = createAsyncThunk(
 //   }
 // );
 
-export const leadSlice = createSlice({
-  name: "lead",
+export const productSlice = createSlice({
+  name: "product",
   initialState,
   reducers: {
     resetMessage: (state) => {
@@ -73,35 +59,15 @@ export const leadSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAllLeads.pending, (state) => {
+      .addCase(getAllProducts.pending, (state) => {
         state.loading = true;
         state.error = false;
       })
-      .addCase(getAllLeads.fulfilled, (state, action) => {
+      .addCase(getAllProducts.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
         state.error = null;
-        state.leads = action.payload;
-      })
-      .addCase(createLead.pending, (state) => {
-        state.loading = true;
-        state.error = false;
-      })
-      .addCase(createLead.fulfilled, (state, action) => {
-        state.loading = false;
-        state.success = true;
-        state.error = null;
-        state.lead = action.payload;
-        state.message = `Lead registrado com sucesso!`;
-      })
-      .addCase(createLead.rejected, (state, action) => {
-        state.loading = false;
-        state.error = true;
-        state.success = false;
-
-        state.message = action.payload;
-
-        state.lead = {};
+        state.products = action.payload;
       });
     //   .addCase(updateProfile.pending, (state) => {
     //     state.loading = true;
@@ -133,5 +99,5 @@ export const leadSlice = createSlice({
   },
 });
 
-export const { resetMessage } = leadSlice.actions;
-export default leadSlice.reducer;
+export const { resetMessage } = productSlice.actions;
+export default productSlice.reducer;
