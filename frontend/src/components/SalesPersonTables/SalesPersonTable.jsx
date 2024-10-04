@@ -39,7 +39,7 @@ function Row(props) {
           {row.email}
         </TableCell>
         <TableCell id={styles.leadRow} className={styles.row} align='right'>
-          {row.leads.length}
+          {row.leads ? row.leads.length : 0}
         </TableCell>
       </TableRow>
       <TableRow>
@@ -59,24 +59,27 @@ function Row(props) {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.customerServices.map((historyRow) => {
-                    console.log(historyRow);
-                    return (
-                      <TableRow key={historyRow.id}>
-                        <TableCell component='th' scope='row'>
-                          {historyRow.date}
-                        </TableCell>
-                        {historyRow.lead ? historyRow.lead.name : "No Lead"}
-                        <TableCell align='right'>
-                          {historyRow.valuePaid}
-                        </TableCell>
-                        {/* <TableCell align='right'>
-                          {Math.round(historyRow.amount * row.price * 100) /
-                            100}
-                        </TableCell> */}
-                      </TableRow>
-                    );
-                  })}
+                  {row.customerServices ? (
+                    row.customerServices.map((historyRow) => {
+                      return (
+                        <TableRow key={historyRow.id}>
+                          <TableCell component='th' scope='row'>
+                            {historyRow.date}
+                          </TableCell>
+                          {historyRow.lead ? historyRow.lead.name : "No Lead"}
+                          <TableCell align='right'>
+                            {historyRow.valuePaid}
+                          </TableCell>
+                          {/* <TableCell align='right'>
+        {Math.round(historyRow.amount * row.price * 100) /
+          100}
+      </TableCell> */}
+                        </TableRow>
+                      );
+                    })
+                  ) : (
+                    <span>Sem atendimentos.</span>
+                  )}
                 </TableBody>
               </Table>
             </Box>
@@ -112,7 +115,6 @@ export default function CollapsibleTable() {
 
   const rows = salesPersons.map((person) => {
     const { name, email, leads, customerServices } = person;
-    console.log("leads", leads);
     return createData(name, email, leads, customerServices);
   });
   return (

@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 // import "./ModalAddSalesPerson.css";
 import {
+  getAllSalesPersons,
   registerSalesPerson,
   resetMessage,
 } from "../../salespersons/slices/salesperson-slice";
@@ -29,14 +30,9 @@ export default function ModalAddSalesPerson() {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const handleOpen = () => setOpen(true);
+
   const handleClose = () => setOpen(false);
 
-  const initialProduct = {
-    _id: "",
-    title: "",
-    quantity: 1,
-    price: 0,
-  };
   const { error, message, success } = useSelector((state) => state.salesPerson);
   const [salesPerson, setSalesPerson] = useState({});
 
@@ -46,11 +42,10 @@ export default function ModalAddSalesPerson() {
 
   const handleSubmit = (e) => {
     dispatch(registerSalesPerson(salesPerson));
-    console.log("error", error);
-    console.log("sucesso", success);
 
     e.preventDefault();
   };
+
   useEffect(() => {
     if (success) {
       handleClose();

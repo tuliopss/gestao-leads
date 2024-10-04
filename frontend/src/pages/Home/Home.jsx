@@ -10,11 +10,8 @@ const Home = () => {
   const { consultations } = useSelector((state) => state.consultation);
 
   useEffect(() => {
-    console.log("dispatch");
     dispatch(getAllConsultations());
   }, [dispatch]);
-
-  console.log(consultations);
 
   return (
     <div>

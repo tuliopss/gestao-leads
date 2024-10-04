@@ -68,7 +68,6 @@ export const leadSlice = createSlice({
         state.loading = false;
         state.success = true;
         state.error = null;
-        console.log(action.payload);
         state.leads = action.payload;
       });
     //   .addCase(updateProfile.pending, (state) => {

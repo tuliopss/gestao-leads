@@ -79,7 +79,7 @@ export const salesPersonSlice = createSlice({
         state.loading = false;
         state.success = true;
         state.error = null;
-        state.salesPerson = action.payload;
+        state.salesPersons.push(action.payload);
         state.message = `Atendente registrado com sucesso!`;
       })
       .addCase(registerSalesPerson.rejected, (state, action) => {
