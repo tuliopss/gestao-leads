@@ -89,7 +89,7 @@ export class SalespersonsService {
       const salesPerson = await this.findSalesPersonByIdOne(salesPersonId);
       const lead = await this.leadService.findLeadById(leadId);
       salesPerson.leads.push(lead);
-      console.log(salesPersonId, leadId);
+      // console.log(salesPersonId, leadId);
       await this.salesPersonRepository.save(salesPerson);
     } catch (error) {
       throw new BadRequestException(error.message);

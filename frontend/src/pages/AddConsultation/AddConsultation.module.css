@@ -1,3 +1,20 @@
+.formConsultationInfo {
+  margin-top: 1em;
+}
+
+.formConsultationInfo input,
+span {
+  margin: 0.5em 0 1em 0;
+  font-weight: bold;
+}
+
+.select,
+input,
+label {
+  margin: 1em auto;
+  width: 80%;
+}
+
 .formConsultationContainer {
   margin: 0 auto;
   width: 50%;
@@ -9,4 +26,9 @@
 
 .hiddenField {
   display: none;
+}
+
+input[type="number"] {
+  text-align: center;
+  font-size: 1.5em;
 }

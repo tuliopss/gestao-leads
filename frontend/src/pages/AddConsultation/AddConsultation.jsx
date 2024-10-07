@@ -1,4 +1,10 @@
-import { Button, FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import {
+  Button,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import styles from "./AddConsultation.module.css";
 import Select from "react-select";
@@ -20,6 +26,8 @@ const AddConsultation = () => {
   const [consultation, setConsultation] = useState({});
   const [date, setDate] = useState("");
   const [valuePaid, setValuePaid] = useState(0);
+  const animatedComponents = makeAnimated();
+
   const handleLeadChange = (e) => {
     setLocalLead({ ...localLead, [e.target.name]: e.target.value });
   };
@@ -38,16 +46,37 @@ const AddConsultation = () => {
         ? false
         : e.target.value;
 
-    setConsultation({
-      ...consultation,
+    setConsultation((prev) => ({
+      ...prev,
       date: date,
       seeAds: value,
       becameCustomer: value,
-      // valuePaid: valuePaid,
       leadId: lead.id,
-    });
-    console.log("CONSULTATION:", consultation);
+      valuePaid:
+        e.target.name === "becameCustomer" && value === false
+          ? 0
+          : prev.valuePaid,
+    }));
   };
+
+  // const handleConsultationChange = (e) => {
+  //   const value =
+  //     e.target.value === "true"
+  //       ? true
+  //       : e.target.value === "false"
+  //       ? false
+  //       : e.target.value;
+
+  //   setConsultation((prev) => ({
+  //     ...prev,
+  //     [e.target.name]: value,
+  //     // Se não for cliente, valuePaid será sempre 0, garantindo que seja um número
+  //     valuePaid:
+  //       e.target.name === "becameCustomer" && value === false
+  //         ? 0
+  //         : prev.valuePaid || 0,
+  //   }));
+  // };
 
   const handleSelectChange = (selectedOptions) => {
     // const selectedOptions = e.map((segment) => {
@@ -76,25 +105,45 @@ const AddConsultation = () => {
     setConsultation({ ...consultation, leadObjection: option });
   };
 
+  //   const handleValuePaidChange = (e) => {
+  //     /*
+
+  // */
+  //     // console.log(e.target.name);
+  //     // setConsultation((prev) => ({
+  //     //   ...prev,
+  //     //   valuePaid: Number(e.target.value),
+  //     // }));
+  //   };
+
+  // const handleValuePaidChange = (e) => {
+  //   const paidValue = Number(e.target.value); // Converta o valor para número
+  //   setValuePaid(paidValue);
+
+  //   setConsultation((prev) => ({
+  //     ...prev,
+  //     valuePaid: paidValue, // Certifique-se de que valuePaid seja um número
+  //   }));
+  // };
   const handleValuePaidChange = (e) => {
-    setValuePaid(Number(e.target.value)); // Atualiza o estado local com o novo valor
+    const paidValue = Number(e.target.value); // Converta o valor para número
+    setValuePaid(paidValue);
+
     setConsultation((prev) => ({
       ...prev,
-      valuePaid: Number(e.target.value), // Atualiza também o estado consultation
+      valuePaid: paidValue, // Atualiza o valor de valuePaid no estado consultation
     }));
   };
 
   const handleConsultationSubmit = (e) => {
     e.preventDefault();
-
+    console.log(consultation);
     dispatch(createConsultation(consultation));
   };
 
   useEffect(() => {
     dispatch(getAllProducts());
   }, [dispatch]);
-
-  const animatedComponents = makeAnimated();
 
   const formatOptions = (product) => {
     if (product.segment && product.segment.length > 0) {
@@ -170,9 +219,14 @@ const AddConsultation = () => {
 
       {
         <form
+          className={styles.formConsultationInfo}
           style={{ display: isHidden ? "block" : "none" }}
           onSubmit={handleConsultationSubmit}>
+          <Typography variant='standard' htmlFor='uncontrolled-native'>
+            Quais produtos o cliente está buscando?
+          </Typography>
           <Select
+            className={styles.select}
             closeMenuOnSelect={false}
             components={animatedComponents}
             defaultValue={[products[4], products[5]]}
@@ -182,6 +236,7 @@ const AddConsultation = () => {
             name='idProduct'
           />
 
+          <h3>Data:</h3>
           <input
             type='date'
             name='date'
@@ -230,11 +285,10 @@ const AddConsultation = () => {
 
           <label
             className={
-              consultation.becameCustomer === "false"
+              consultation.becameCustomer === false
                 ? `${styles.hiddenField}`
                 : ""
             }>
-            <p>Comprou algum produto?</p>
             <span>Valor da compra</span>
 
             <input
