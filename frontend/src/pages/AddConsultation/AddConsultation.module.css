@@ -6,3 +6,7 @@
 .formConsultation h2 {
   text-align: center;
 }
+
+.hiddenField {
+  display: none;
+}

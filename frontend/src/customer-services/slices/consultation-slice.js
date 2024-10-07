@@ -21,6 +21,17 @@ export const getAllConsultations = createAsyncThunk(
     return data;
   }
 );
+export const createConsultation = createAsyncThunk(
+  "consultation/create",
+  async (consultation, thunkAPI) => {
+    const data = await consultationsService.createConsultation(consultation);
+
+    if (data.error) {
+      return thunkAPI.rejectWithValue(data.error.message);
+    }
+    return data;
+  }
+);
 
 // export const getLeadById = createAsyncThunk(
 //   "lead/leadById",
@@ -69,6 +80,27 @@ export const consultationSlice = createSlice({
         state.success = true;
         state.error = null;
         state.consultations = action.payload;
+      })
+      .addCase(createConsultation.pending, (state) => {
+        state.loading = true;
+        state.error = false;
+      })
+
+      .addCase(createConsultation.fulfilled, (state, action) => {
+        state.loading = false;
+        state.success = true;
+        state.error = null;
+        state.consultation = action.payload;
+        state.message = `Atendimento registrado com sucesso!`;
+      })
+      .addCase(createConsultation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = true;
+        state.success = false;
+
+        state.message = action.payload;
+
+        state.consultation = {};
       });
     //   .addCase(updateProfile.pending, (state) => {
     //     state.loading = true;

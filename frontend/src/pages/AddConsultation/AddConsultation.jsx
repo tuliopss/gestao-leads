@@ -7,18 +7,89 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "../../products/slices/products-slice";
 import { replace } from "react-router-dom";
 import { createLead } from "../../leads/slices/leads-slice";
-// import { colourOptions } from "../data";
+import SelectOne from "../../components/SelectOne/SelectOne";
+import { createConsultation } from "../../customer-services/slices/consultation-slice";
+import SelectSalesPerson from "../../components/SelectOne/SelectSalesPerson/SelectSalesPerson";
 
 const AddConsultation = () => {
   const dispatch = useDispatch();
   const { products } = useSelector((state) => state.product);
-  const { error, message, success } = useSelector((state) => state.lead);
+  const { lead, error, message, success } = useSelector((state) => state.lead);
   const [isHidden, setIsHidden] = useState(false);
-  const [lead, setLead] = useState({});
-
+  const [localLead, setLocalLead] = useState({ name: "", whatsapp: "" });
+  const [consultation, setConsultation] = useState({});
+  const [date, setDate] = useState("");
+  const [valuePaid, setValuePaid] = useState(0);
   const handleLeadChange = (e) => {
-    setLead({ ...lead, [e.target.name]: e.target.value });
+    setLocalLead({ ...localLead, [e.target.name]: e.target.value });
   };
+
+  const handleLeadSubmit = (e) => {
+    e.preventDefault();
+
+    dispatch(createLead(localLead));
+  };
+
+  const handleConsultationChange = (e) => {
+    const value =
+      e.target.value === "true"
+        ? true
+        : e.target.value === "false"
+        ? false
+        : e.target.value;
+
+    setConsultation({
+      ...consultation,
+      date: date,
+      seeAds: value,
+      becameCustomer: value,
+      // valuePaid: valuePaid,
+      leadId: lead.id,
+    });
+    console.log("CONSULTATION:", consultation);
+  };
+
+  const handleSelectChange = (selectedOptions) => {
+    // const selectedOptions = e.map((segment) => {
+    //   console.log("PRODUTO", segment.idProduct);
+    //   return { productSegmentsId: segment.idProduct };
+    // });
+
+    // setConsultation({ ...consultation, productSegmentsId: selectedOptions });
+    // return selectedOptions;
+    const selectedIds = selectedOptions.map((segment) => {
+      console.log("PRODUTO", segment.idProduct); // Certifique-se de que idProduct é um UUID válido
+      return segment.idProduct; // Retornando o valor direto
+    });
+
+    setConsultation({
+      ...consultation,
+      productSegmentsId: selectedIds, // Agora você está passando um array de UUIDs
+    });
+  };
+
+  const handleSalesPersonChange = (person) => {
+    setConsultation({ ...consultation, salesPersonId: person });
+  };
+
+  const handleLeadObjectionChange = (option) => {
+    setConsultation({ ...consultation, leadObjection: option });
+  };
+
+  const handleValuePaidChange = (e) => {
+    setValuePaid(Number(e.target.value)); // Atualiza o estado local com o novo valor
+    setConsultation((prev) => ({
+      ...prev,
+      valuePaid: Number(e.target.value), // Atualiza também o estado consultation
+    }));
+  };
+
+  const handleConsultationSubmit = (e) => {
+    e.preventDefault();
+
+    dispatch(createConsultation(consultation));
+  };
+
   useEffect(() => {
     dispatch(getAllProducts());
   }, [dispatch]);
@@ -44,6 +115,7 @@ const AddConsultation = () => {
     .map((product) => {
       if (product.segment) {
         return {
+          idProduct: product.id,
           value: product.segment,
           label: formatOptions(product),
         };
@@ -51,20 +123,11 @@ const AddConsultation = () => {
     })
     .filter((option) => option !== null);
 
-  const handleLeadSubmit = (e) => {
-    dispatch(createLead(lead));
-
+  useEffect(() => {
     if (success) {
       setIsHidden(true);
     }
-
-    e.preventDefault();
-  };
-  useEffect(() => {
-    if (success) {
-      setIsHidden(true); // Esconde o formulário quando o lead for registrado com sucesso
-    }
-  }, [success]); // O useEffect será chamado sempre que o valor de success mudar
+  }, [success]);
 
   return (
     <div className={styles.formConsultationContainer}>
@@ -105,46 +168,95 @@ const AddConsultation = () => {
         </Button>
       </form>
 
-      <form style={{ display: isHidden ? "block" : "none" }}>
-        <Select
-          closeMenuOnSelect={false}
-          components={animatedComponents}
-          defaultValue={[products[4], products[5]]}
-          isMulti
-          options={options}
-        />
+      {
+        <form
+          style={{ display: isHidden ? "block" : "none" }}
+          onSubmit={handleConsultationSubmit}>
+          <Select
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            defaultValue={[products[4], products[5]]}
+            isMulti
+            options={options}
+            onChange={handleSelectChange}
+            name='idProduct'
+          />
 
-        <RadioGroup
-          row
-          aria-labelledby='demo-row-radio-buttons-group-label'
-          name='row-radio-buttons-group'>
-          <h3>Viu algum tipo de anúncio?</h3>
-          <FormControlLabel value={true} control={<Radio />} label='Sim' />
-          <FormControlLabel value={false} control={<Radio />} label='Não' />
-        </RadioGroup>
+          <input
+            type='date'
+            name='date'
+            id=''
+            onChange={(e) => setDate(e.target.value)}
+          />
 
-        <RadioGroup
-          row
-          aria-labelledby='demo-row-radio-buttons-group-label'
-          name='row-radio-buttons-group'>
-          <h3>Se tornou cliente?</h3>
-          <FormControlLabel value={true} control={<Radio />} label='Sim' />
-          <FormControlLabel value={false} control={<Radio />} label='Não' />
-        </RadioGroup>
+          <RadioGroup
+            row
+            aria-labelledby='demo-row-radio-buttons-group-label'
+            name='seeAds'>
+            <h3>Viu algum tipo de anúncio?</h3>
+            <FormControlLabel
+              value={true}
+              control={<Radio />}
+              label='Sim'
+              onChange={handleConsultationChange}
+            />
 
-        <label>
-          <p>Comprou algum produto?</p>
-          <span>Valor da compra</span>
-          <input type='number' name='valuePaid' />
-        </label>
+            <FormControlLabel
+              value={false}
+              control={<Radio />}
+              label='Não'
+              onChange={handleConsultationChange}
+            />
+          </RadioGroup>
 
-        <Button
-          variant='contained'
-          style={{ backgroundColor: "#ff5b00" }}
-          type='submit'>
-          Finalizar
-        </Button>
-      </form>
+          <RadioGroup
+            row
+            aria-labelledby='demo-row-radio-buttons-group-label'
+            name='becameCustomer'>
+            <h3>Se tornou cliente?</h3>
+            <FormControlLabel
+              value={true}
+              control={<Radio />}
+              label='Sim'
+              onChange={handleConsultationChange}
+            />
+            <FormControlLabel
+              value={false}
+              control={<Radio />}
+              label='Não'
+              onChange={handleConsultationChange}
+            />
+          </RadioGroup>
+
+          <label
+            className={
+              consultation.becameCustomer === "false"
+                ? `${styles.hiddenField}`
+                : ""
+            }>
+            <p>Comprou algum produto?</p>
+            <span>Valor da compra</span>
+
+            <input
+              type='number'
+              value={valuePaid}
+              name='valuePaid'
+              onChange={handleValuePaidChange}
+            />
+          </label>
+
+          <SelectOne handleLeadObjectionChange={handleLeadObjectionChange} />
+          <SelectSalesPerson
+            handleSalesPersonChange={handleSalesPersonChange}
+          />
+          <Button
+            variant='contained'
+            style={{ backgroundColor: "#ff5b00" }}
+            type='submit'>
+            Finalizar
+          </Button>
+        </form>
+      }
     </div>
   );
 };

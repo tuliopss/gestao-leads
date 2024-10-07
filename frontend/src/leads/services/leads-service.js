@@ -5,7 +5,6 @@ const getAllLeads = async () => {
 
   try {
     const response = await fetch(`${apiUrl}/leads`, config);
-    console.log("oi", response);
     return response.json();
   } catch (error) {
     console.log(error);

@@ -13,7 +13,6 @@ export const getAllLeads = createAsyncThunk(
   "lead/getAll",
   async (_, thunkAPI) => {
     const data = await leadsService.getAllLeads();
-    console.log("data", data);
 
     // if (data.error) {
     //   return thunkAPI.rejectWithValue(data.error.message);
