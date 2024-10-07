@@ -27,7 +27,7 @@ export const createLead = createAsyncThunk(
     const data = await leadsService.createLead(lead);
 
     if (data.error) {
-      return thunkAPI.rejectWithValue(data.error.message);
+      return thunkAPI.rejectWithValue(data.message[0]);
     }
 
     return data;
@@ -67,7 +67,7 @@ export const leadSlice = createSlice({
   reducers: {
     resetMessage: (state) => {
       state.message = null;
-      state.error = null;
+      state.error = false;
     },
   },
   extraReducers: (builder) => {
@@ -79,17 +79,18 @@ export const leadSlice = createSlice({
       .addCase(getAllLeads.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.error = null;
+        state.error = false;
         state.leads = action.payload;
       })
       .addCase(createLead.pending, (state) => {
         state.loading = true;
         state.error = false;
+        state.success = false;
       })
       .addCase(createLead.fulfilled, (state, action) => {
         state.loading = false;
         state.success = true;
-        state.error = null;
+        state.error = false;
         state.lead = action.payload;
         state.message = `Lead registrado com sucesso!`;
       })

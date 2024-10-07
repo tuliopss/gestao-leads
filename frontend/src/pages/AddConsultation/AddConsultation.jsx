@@ -16,6 +16,7 @@ import { createLead } from "../../leads/slices/leads-slice";
 import SelectOne from "../../components/SelectOne/SelectOne";
 import { createConsultation } from "../../customer-services/slices/consultation-slice";
 import SelectSalesPerson from "../../components/SelectOne/SelectSalesPerson/SelectSalesPerson";
+import Message from "../../components/Message/Message";
 
 const AddConsultation = () => {
   const dispatch = useDispatch();
@@ -180,6 +181,9 @@ const AddConsultation = () => {
 
   return (
     <div className={styles.formConsultationContainer}>
+      {error && <Message msg={message} type='error' />}
+      {message && !error && <Message msg={message} type='success' />}
+
       <form
         onSubmit={handleLeadSubmit}
         style={{ display: !isHidden ? "block" : "none" }}

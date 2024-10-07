@@ -12,6 +12,7 @@ import {
 } from "../../salespersons/slices/salesperson-slice";
 import styles from "./ModalAddSalesPerson.module.css";
 import Message from "../Message/Message";
+import { useResetComponentMessage } from "../../hooks/useResetComponentMessage";
 
 const style = {
   color: "#000",
@@ -30,6 +31,7 @@ export default function ModalAddSalesPerson() {
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
   const handleOpen = () => setOpen(true);
+  const resetComponentMessage = useResetComponentMessage(dispatch);
 
   const handleClose = () => setOpen(false);
 
@@ -41,18 +43,27 @@ export default function ModalAddSalesPerson() {
   };
 
   const handleSubmit = (e) => {
-    dispatch(registerSalesPerson(salesPerson));
-
     e.preventDefault();
+    dispatch(registerSalesPerson(salesPerson));
+    // dispatch(resetMessage());
+    // resetComponentMessage();
+
+    // resetMessage();
   };
 
   useEffect(() => {
+    console.log(success);
     if (success) {
       handleClose();
       dispatch(resetMessage());
     }
   }, [success, dispatch, handleClose]);
-
+  useEffect(() => {
+    if (message) {
+      // Use a função que reseta a mensagem após 2 segundos
+      resetComponentMessage();
+    }
+  }, [message, resetComponentMessage]);
   return (
     <div>
       <Button variant='contained' color='success' onClick={handleOpen}>
@@ -65,10 +76,8 @@ export default function ModalAddSalesPerson() {
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'>
         <Box sx={style}>
-          <div className={styles.message_container}>
-            {error && <Message msg={message} type='error' />}{" "}
-            {message && !error && <Message msg={message} type='success' />}{" "}
-          </div>
+          {error && message && <Message msg={message} type='error' />}
+          {message && !error && <Message msg={message} type='success' />}
 
           <Typography id='modal-modal-title' variant='h6' component='h2'>
             Insira as informações

@@ -108,3 +108,7 @@ input[type="date"] {
   color: #333;
   background-color: #f9f9f9;
 }
+
+.message_container {
+  margin: 1em 0;
+}
