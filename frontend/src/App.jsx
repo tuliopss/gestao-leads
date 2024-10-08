@@ -9,11 +9,13 @@ import Home from "./pages/Home/Home";
 import SalesPersons from "./pages/SalesPersons/SalesPersons";
 import Leads from "./pages/Leads/Leads";
 import AddConsultation from "./pages/AddConsultation/AddConsultation";
+import Message from "./components/Message/Message";
 
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
+
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/salesPersons' element={<SalesPersons />} />

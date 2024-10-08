@@ -1,13 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import salesPersonService from "../services/salesperson-service";
+import { setMessage } from "../../utils/global-messages-slices";
 
 const initialState = {
   salesPerson: {},
   salesPersons: [],
-  error: false,
-  success: false,
+
   loading: false,
-  message: null,
 };
 
 export const getAllSalesPersons = createAsyncThunk(
@@ -22,29 +21,36 @@ export const getAllSalesPersons = createAsyncThunk(
   }
 );
 
-// export const getLeadById = createAsyncThunk(
-//   "lead/leadById",
-//   async (id, thunkAPI) => {
-//     const data = await leadService.getUserById(id, token);
-
-//     if (data.error) {
-//       return thunkAPI.rejectWithValue(data.error.message);
-//     }
-
-//     return data;
-//   }
-// );
-
 export const registerSalesPerson = createAsyncThunk(
   "salesPerson/register",
   async (salesPerson, thunkAPI) => {
-    const data = await salesPersonService.registerSalesPerson(salesPerson);
+    try {
+      const data = await salesPersonService.registerSalesPerson(salesPerson);
 
-    if (data.error) {
-      return thunkAPI.rejectWithValue(data.message[0]);
+      if (data.error) {
+        thunkAPI.dispatch(
+          setMessage({ message: data.message[0], error: true, success: false })
+        );
+        return thunkAPI.rejectWithValue(data.message[0]);
+      }
+      thunkAPI.dispatch(
+        setMessage({
+          message: "Atendente registrado com sucesso!",
+          error: false,
+          success: true,
+        })
+      );
+      return data;
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Erro ao registrar lead";
+
+      thunkAPI.dispatch(
+        setMessage({ message: errorMessage, error: true, success: false })
+      );
+
+      return thunkAPI.rejectWithValue(errorMessage);
     }
-
-    return data;
   }
 );
 

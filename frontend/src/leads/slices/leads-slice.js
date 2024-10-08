@@ -1,12 +1,14 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import leadsService from "../services/leads-service";
+import { setMessage } from "../../utils/global-messages-slices";
+import { useDispatch } from "react-redux";
 const initialState = {
   lead: {},
   leads: [],
-  error: false,
-  success: false,
   loading: false,
-  message: null,
+  // error: false,
+  // success: false,
+  // message: null,
 };
 
 export const getAllLeads = createAsyncThunk(
@@ -24,43 +26,36 @@ export const getAllLeads = createAsyncThunk(
 export const createLead = createAsyncThunk(
   "lead/create",
   async (lead, thunkAPI) => {
-    const data = await leadsService.createLead(lead);
+    try {
+      const data = await leadsService.createLead(lead);
 
-    if (data.error) {
-      return thunkAPI.rejectWithValue(data.message[0]);
+      if (data.error) {
+        thunkAPI.dispatch(
+          setMessage({ message: data.message[0], error: true, success: false })
+        );
+        return thunkAPI.rejectWithValue(data.message[0]);
+      }
+
+      // Caso o lead seja criado com sucesso
+      thunkAPI.dispatch(
+        setMessage({
+          message: "Lead registrado com sucesso!",
+          error: false,
+          success: true,
+        })
+      );
+
+      return data;
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message || "Erro ao registrar lead";
+      thunkAPI.dispatch(
+        setMessage({ message: errorMessage, error: true, success: false })
+      );
+      return thunkAPI.rejectWithValue(errorMessage);
     }
-
-    return data;
   }
 );
-
-// export const getLeadById = createAsyncThunk(
-//   "lead/leadById",
-//   async (id, thunkAPI) => {
-//     const data = await leadService.getUserById(id, token);
-
-//     if (data.error) {
-//       return thunkAPI.rejectWithValue(data.error.message);
-//     }
-
-//     return data;
-//   }
-// );
-
-// export const updateProfile = createAsyncThunk(
-//   "user/update",
-//   async (user, thunkAPI) => {
-//     const token = thunkAPI.getState().auth.user.token;
-//     const data = await userService.updateProfile(user, token);
-
-//     if (data.errors) {
-//       return thunkAPI.rejectWithValue(data.errors[0]);
-//     }
-
-//     return data;
-//   }
-// );
-
 export const leadSlice = createSlice({
   name: "lead",
   initialState,
@@ -92,7 +87,12 @@ export const leadSlice = createSlice({
         state.success = true;
         state.error = false;
         state.lead = action.payload;
-        state.message = `Lead registrado com sucesso!`;
+
+        // action.asyncDispatch(
+        //   setMessage({ message: "Lead registrado com sucesso!" })
+        // );
+
+        // state.message = `Lead registrado com sucesso!`;
       })
       .addCase(createLead.rejected, (state, action) => {
         state.loading = false;

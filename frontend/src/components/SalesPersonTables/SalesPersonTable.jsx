@@ -18,6 +18,18 @@ import { getAllSalesPersons } from "../../salespersons/slices/salesperson-slice"
 import { getAllConsultations } from "../../customer-services/slices/consultation-slice";
 
 import styles from "./SalesPersonTable.module.css";
+
+const formatDate = (date) => {
+  const newDate = new Date(date);
+
+  const day =
+    newDate.getDate() < 10 ? "0" + newDate.getDate() : newDate.getDate();
+  const month =
+    newDate.getMonth() < 10 ? "0" + newDate.getMonth() : newDate.getMonth();
+  const year = newDate.getFullYear();
+
+  return `${day}/${month}/${year}`;
+};
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
@@ -54,8 +66,8 @@ function Row(props) {
                   <TableRow>
                     <TableCell>Data</TableCell>
                     <TableCell>Lead</TableCell>
-                    <TableCell align='right'>Amount</TableCell>
-                    <TableCell align='right'>Total price ($)</TableCell>
+
+                    <TableCell align='right'>Valor da venda (R$)</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -64,7 +76,7 @@ function Row(props) {
                       return (
                         <TableRow key={historyRow.id}>
                           <TableCell component='th' scope='row'>
-                            {historyRow.date}
+                            {formatDate(historyRow.date)}
                           </TableCell>
                           {historyRow.lead ? historyRow.lead.name : "No Lead"}
                           <TableCell align='right'>

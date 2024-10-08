@@ -11,24 +11,35 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "../../products/slices/products-slice";
-import { replace } from "react-router-dom";
+import { redirect, replace } from "react-router-dom";
 import { createLead } from "../../leads/slices/leads-slice";
 import SelectOne from "../../components/SelectOne/SelectOne";
-import { createConsultation } from "../../customer-services/slices/consultation-slice";
+import {
+  createConsultation,
+  resetMessage,
+} from "../../customer-services/slices/consultation-slice";
 import SelectSalesPerson from "../../components/SelectOne/SelectSalesPerson/SelectSalesPerson";
 import Message from "../../components/Message/Message";
+import { useResetComponentMessage } from "../../hooks/useResetComponentMessage";
 
 const AddConsultation = () => {
   const dispatch = useDispatch();
+
   const { products } = useSelector((state) => state.product);
-  const { lead, error, message, success } = useSelector((state) => state.lead);
+  const { message, error, success } = useSelector((state) => state.message); // Seleciona a mensagem global
+  const { lead } = useSelector((state) => state.lead);
+
   const [isHidden, setIsHidden] = useState(false);
   const [localLead, setLocalLead] = useState({ name: "", whatsapp: "" });
   const [consultation, setConsultation] = useState({});
   const [date, setDate] = useState("");
   const [valuePaid, setValuePaid] = useState(0);
-  const animatedComponents = makeAnimated();
 
+  const animatedComponents = makeAnimated();
+  const resetComponentMessage = useResetComponentMessage(dispatch);
+
+  console.log("SUCCESS", success);
+  console.log("error", error);
   const handleLeadChange = (e) => {
     setLocalLead({ ...localLead, [e.target.name]: e.target.value });
   };
@@ -60,25 +71,6 @@ const AddConsultation = () => {
     }));
   };
 
-  // const handleConsultationChange = (e) => {
-  //   const value =
-  //     e.target.value === "true"
-  //       ? true
-  //       : e.target.value === "false"
-  //       ? false
-  //       : e.target.value;
-
-  //   setConsultation((prev) => ({
-  //     ...prev,
-  //     [e.target.name]: value,
-  //     // Se não for cliente, valuePaid será sempre 0, garantindo que seja um número
-  //     valuePaid:
-  //       e.target.name === "becameCustomer" && value === false
-  //         ? 0
-  //         : prev.valuePaid || 0,
-  //   }));
-  // };
-
   const handleSelectChange = (selectedOptions) => {
     // const selectedOptions = e.map((segment) => {
     //   console.log("PRODUTO", segment.idProduct);
@@ -106,26 +98,6 @@ const AddConsultation = () => {
     setConsultation({ ...consultation, leadObjection: option });
   };
 
-  //   const handleValuePaidChange = (e) => {
-  //     /*
-
-  // */
-  //     // console.log(e.target.name);
-  //     // setConsultation((prev) => ({
-  //     //   ...prev,
-  //     //   valuePaid: Number(e.target.value),
-  //     // }));
-  //   };
-
-  // const handleValuePaidChange = (e) => {
-  //   const paidValue = Number(e.target.value); // Converta o valor para número
-  //   setValuePaid(paidValue);
-
-  //   setConsultation((prev) => ({
-  //     ...prev,
-  //     valuePaid: paidValue, // Certifique-se de que valuePaid seja um número
-  //   }));
-  // };
   const handleValuePaidChange = (e) => {
     const paidValue = Number(e.target.value); // Converta o valor para número
     setValuePaid(paidValue);
@@ -138,13 +110,25 @@ const AddConsultation = () => {
 
   const handleConsultationSubmit = (e) => {
     e.preventDefault();
-    console.log(consultation);
+
     dispatch(createConsultation(consultation));
   };
 
   useEffect(() => {
     dispatch(getAllProducts());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (success) {
+      dispatch(resetMessage());
+    }
+  }, [success, dispatch]);
+
+  useEffect(() => {
+    if (message) {
+      resetComponentMessage();
+    }
+  }, [message, resetComponentMessage]);
 
   const formatOptions = (product) => {
     if (product.segment && product.segment.length > 0) {
@@ -182,7 +166,7 @@ const AddConsultation = () => {
   return (
     <div className={styles.formConsultationContainer}>
       {error && <Message msg={message} type='error' />}
-      {message && !error && <Message msg={message} type='success' />}
+      {message && !error && success && <Message msg={message} type='success' />}
 
       <form
         onSubmit={handleLeadSubmit}

@@ -35,7 +35,7 @@ export default function ModalAddSalesPerson() {
 
   const handleClose = () => setOpen(false);
 
-  const { error, message, success } = useSelector((state) => state.salesPerson);
+  const { error, message, success } = useSelector((state) => state.message);
   const [salesPerson, setSalesPerson] = useState({});
 
   const handleChange = (e) => {
@@ -45,10 +45,6 @@ export default function ModalAddSalesPerson() {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(registerSalesPerson(salesPerson));
-    // dispatch(resetMessage());
-    // resetComponentMessage();
-
-    // resetMessage();
   };
 
   useEffect(() => {
@@ -58,17 +54,22 @@ export default function ModalAddSalesPerson() {
       dispatch(resetMessage());
     }
   }, [success, dispatch, handleClose]);
+
   useEffect(() => {
     if (message) {
-      // Use a função que reseta a mensagem após 2 segundos
       resetComponentMessage();
     }
   }, [message, resetComponentMessage]);
   return (
     <div>
-      <Button variant='contained' color='success' onClick={handleOpen}>
-        Registrar novo atendente
-      </Button>
+      <header className={styles.header}>
+        <Button variant='contained' color='success' onClick={handleOpen}>
+          Registrar novo atendente
+        </Button>
+
+        {error && message && <Message msg={message} type='error' />}
+        {message && !error && <Message msg={message} type='success' />}
+      </header>
 
       <Modal
         open={open}
