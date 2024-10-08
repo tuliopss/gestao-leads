@@ -12,6 +12,7 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(getAllConsultations());
+    console.log(consultations);
   }, [dispatch]);
 
   return (

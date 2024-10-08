@@ -4,10 +4,10 @@ import {
   NativeSelect,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
-
+import React, { useEffect, useState } from "react";
+import styles from "./Select.module.css";
 const SelectOne = ({ handleLeadObjectionChange }) => {
-  const options = [
+  const objections = [
     "INDECISO",
     "PRODUTO_EM_FALTA",
     "NAO_RESPONDEU",
@@ -15,7 +15,16 @@ const SelectOne = ({ handleLeadObjectionChange }) => {
     "PRECO",
   ];
 
-  // const [option, setOption] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(objections[0]);
+
+  const handleChange = (e) => {
+    setSelectedOption(e.target.value);
+    handleLeadObjectionChange(selectedOption); // Chama a função passada pelo pai com o valor selecionado
+  };
+
+  useEffect(() => {
+    console.log("OBJECAO", selectedOption);
+  }, []);
 
   const formatOptions = (option) => {
     if (option && option.length > 0) {
@@ -29,12 +38,6 @@ const SelectOne = ({ handleLeadObjectionChange }) => {
 
     return "";
   };
-
-  const handleChange = (e) => {
-    const selectedOption = e.target.value;
-    handleLeadObjectionChange(selectedOption); // Chama a função passada pelo pai com o valor selecionado
-  };
-
   return (
     <div>
       <FormControl fullWidth onChange={handleChange}>
@@ -42,12 +45,13 @@ const SelectOne = ({ handleLeadObjectionChange }) => {
           Objeção?
         </Typography>
         <NativeSelect
-          defaultValue={30}
+          className={styles.select}
+          defaultValue={objections[0]}
           inputProps={{
             name: "leadObjection",
             id: "uncontrolled-native",
           }}>
-          {options.map((option, index) => (
+          {objections.map((option, index) => (
             <option key={index} value={option}>
               {formatOptions(option)}
             </option>

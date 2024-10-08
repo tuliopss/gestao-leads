@@ -4,13 +4,14 @@ const ConsultationCard = ({ consultation }) => {
   const formatDate = (date) => {
     const newDate = new Date(date);
 
-    const day =
-      newDate.getDate() < 10 ? "0" + newDate.getDate() : newDate.getDate();
-    const month =
-      newDate.getMonth() < 10 ? "0" + newDate.getMonth() : newDate.getMonth();
+    const day = newDate.getDate() + 1;
+    const month = newDate.getMonth() + 1;
     const year = newDate.getFullYear();
 
-    return `${day}/${month}/${year}`;
+    const formattedDay = day < 10 ? "0" + day : day;
+    const formattedMonth = month < 10 ? "0" + month : month;
+
+    return `${formattedDay}/${formattedMonth}/${year}`;
   };
 
   return (

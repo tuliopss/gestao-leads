@@ -5,7 +5,7 @@ import {
   RadioGroup,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./AddConsultation.module.css";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
@@ -21,25 +21,29 @@ import {
 import SelectSalesPerson from "../../components/SelectOne/SelectSalesPerson/SelectSalesPerson";
 import Message from "../../components/Message/Message";
 import { useResetComponentMessage } from "../../hooks/useResetComponentMessage";
+import { DateTime } from "luxon";
 
 const AddConsultation = () => {
   const dispatch = useDispatch();
 
   const { products } = useSelector((state) => state.product);
-  const { message, error, success } = useSelector((state) => state.message); // Seleciona a mensagem global
+  const { message, error, success } = useSelector((state) => state.message);
   const { lead } = useSelector((state) => state.lead);
 
   const [isHidden, setIsHidden] = useState(false);
+  const [becameCustomer, setBecameCustomer] = useState(false);
+  const [seeAds, setSeeAds] = useState(false);
   const [localLead, setLocalLead] = useState({ name: "", whatsapp: "" });
-  const [consultation, setConsultation] = useState({});
+  const [consultation, setConsultation] = useState({
+    leadObjection: "INDECISO",
+    salesPersonId: "",
+  });
   const [date, setDate] = useState("");
   const [valuePaid, setValuePaid] = useState(0);
 
   const animatedComponents = makeAnimated();
   const resetComponentMessage = useResetComponentMessage(dispatch);
 
-  console.log("SUCCESS", success);
-  console.log("error", error);
   const handleLeadChange = (e) => {
     setLocalLead({ ...localLead, [e.target.name]: e.target.value });
   };
@@ -50,35 +54,7 @@ const AddConsultation = () => {
     dispatch(createLead(localLead));
   };
 
-  const handleConsultationChange = (e) => {
-    const value =
-      e.target.value === "true"
-        ? true
-        : e.target.value === "false"
-        ? false
-        : e.target.value;
-
-    setConsultation((prev) => ({
-      ...prev,
-      date: date,
-      seeAds: value,
-      becameCustomer: value,
-      leadId: lead.id,
-      valuePaid:
-        e.target.name === "becameCustomer" && value === false
-          ? 0
-          : prev.valuePaid,
-    }));
-  };
-
   const handleSelectChange = (selectedOptions) => {
-    // const selectedOptions = e.map((segment) => {
-    //   console.log("PRODUTO", segment.idProduct);
-    //   return { productSegmentsId: segment.idProduct };
-    // });
-
-    // setConsultation({ ...consultation, productSegmentsId: selectedOptions });
-    // return selectedOptions;
     const selectedIds = selectedOptions.map((segment) => {
       console.log("PRODUTO", segment.idProduct); // Certifique-se de que idProduct é um UUID válido
       return segment.idProduct; // Retornando o valor direto
@@ -98,24 +74,61 @@ const AddConsultation = () => {
     setConsultation({ ...consultation, leadObjection: option });
   };
 
+  const handleBecameCustomerChange = (e) => {
+    const value =
+      e.target.value === "true"
+        ? true
+        : e.target.value === "false"
+        ? false
+        : e.target.value;
+
+    setBecameCustomer(value);
+    setConsultation({ ...consultation, becameCustomer: becameCustomer });
+  };
+
+  const handleSeeAdsChange = (e) => {
+    const value =
+      e.target.value === "true"
+        ? true
+        : e.target.value === "false"
+        ? false
+        : e.target.value;
+
+    setSeeAds(value);
+    setConsultation({ ...consultation, seeAds: seeAds });
+  };
+
   const handleValuePaidChange = (e) => {
-    const paidValue = Number(e.target.value); // Converta o valor para número
+    const paidValue = Number(e.target.value);
     setValuePaid(paidValue);
 
     setConsultation((prev) => ({
       ...prev,
-      valuePaid: paidValue, // Atualiza o valor de valuePaid no estado consultation
+      valuePaid: paidValue,
     }));
   };
 
   const handleConsultationSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(createConsultation(consultation));
-  };
+    setConsultation((prev) => {
+      const updatedConsultation = {
+        ...prev,
+        date: date,
+        seeAds: seeAds,
+        becameCustomer: becameCustomer,
+        leadId: lead.id,
+        valuePaid: becameCustomer === false ? 0 : valuePaid,
+      };
 
+      dispatch(createConsultation(updatedConsultation));
+
+      return updatedConsultation;
+    });
+  };
   useEffect(() => {
     dispatch(getAllProducts());
+    setConsultation({ ...consultation });
   }, [dispatch]);
 
   useEffect(() => {
@@ -208,11 +221,9 @@ const AddConsultation = () => {
       {
         <form
           className={styles.formConsultationInfo}
-          style={{ display: isHidden ? "block" : "none" }}
+          // style={{ display: isHidden ? "block" : "none" }}
           onSubmit={handleConsultationSubmit}>
-          <Typography variant='standard' htmlFor='uncontrolled-native'>
-            Quais produtos o cliente está buscando?
-          </Typography>
+          <h3>Quais produtos o cliente está buscando?</h3>
           <Select
             className={styles.select}
             closeMenuOnSelect={false}
@@ -232,53 +243,58 @@ const AddConsultation = () => {
             onChange={(e) => setDate(e.target.value)}
           />
 
-          <RadioGroup
-            row
-            aria-labelledby='demo-row-radio-buttons-group-label'
-            name='seeAds'>
+          <div className={styles.radioGroupContainer}>
             <h3>Viu algum tipo de anúncio?</h3>
-            <FormControlLabel
-              value={true}
-              control={<Radio />}
-              label='Sim'
-              onChange={handleConsultationChange}
-            />
+            <RadioGroup
+              row
+              aria-labelledby='demo-row-radio-buttons-group-label'
+              name='seeAds'>
+              <FormControlLabel
+                // Centraliza os botões de rádio
+                value={true}
+                control={<Radio />}
+                label='Sim'
+                labelPlacement='bottom'
+                onChange={handleSeeAdsChange}
+              />
 
-            <FormControlLabel
-              value={false}
-              control={<Radio />}
-              label='Não'
-              onChange={handleConsultationChange}
-            />
-          </RadioGroup>
+              <FormControlLabel
+                value={false}
+                control={<Radio />}
+                label='Não'
+                labelPlacement='bottom'
+                onChange={handleSeeAdsChange}
+              />
+            </RadioGroup>
+          </div>
 
-          <RadioGroup
-            row
-            aria-labelledby='demo-row-radio-buttons-group-label'
-            name='becameCustomer'>
+          <div className={styles.radioGroupContainer}>
             <h3>Se tornou cliente?</h3>
-            <FormControlLabel
-              value={true}
-              control={<Radio />}
-              label='Sim'
-              onChange={handleConsultationChange}
-            />
-            <FormControlLabel
-              value={false}
-              control={<Radio />}
-              label='Não'
-              onChange={handleConsultationChange}
-            />
-          </RadioGroup>
+            <RadioGroup
+              row
+              aria-labelledby='demo-row-radio-buttons-group-label'
+              name='becameCustomer'>
+              <FormControlLabel
+                value={true}
+                control={<Radio />}
+                label='Sim'
+                labelPlacement='bottom'
+                onChange={handleBecameCustomerChange}
+              />
+
+              <FormControlLabel
+                value={false}
+                control={<Radio />}
+                label='Não'
+                labelPlacement='bottom'
+                onChange={handleBecameCustomerChange}
+              />
+            </RadioGroup>
+          </div>
 
           <label
-            className={
-              consultation.becameCustomer === false
-                ? `${styles.hiddenField}`
-                : ""
-            }>
+            className={becameCustomer === true ? "" : `${styles.hiddenField}`}>
             <span>Valor da compra</span>
-
             <input
               type='number'
               value={valuePaid}

@@ -1,18 +1,11 @@
 .formConsultationInfo {
   margin-top: 1em;
 }
-
-.formConsultationInfo input,
+.formConsultationInfo input[type="select"],
 span {
   margin: 0.5em 0 1em 0;
   font-weight: bold;
-}
-
-.select,
-input,
-label {
-  margin: 1em auto;
-  width: 80%;
+  text-align: center;
 }
 
 .formConsultationContainer {
@@ -22,6 +15,19 @@ label {
 
 .formConsultation h2 {
   text-align: center;
+}
+
+.radioGroupContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1em;
+}
+
+h3,
+.radioGroupContainer h3 {
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .hiddenField {

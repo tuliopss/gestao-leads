@@ -7,11 +7,11 @@ import {
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllSalesPersons } from "../../../salespersons/slices/salesperson-slice";
-
+import styles from "../Select.module.css";
 const SelectSalesPerson = ({ handleSalesPersonChange }) => {
   const { salesPersons } = useSelector((state) => state.salesPerson);
   const dispatch = useDispatch();
-
+  // console.log("SALES", salesPersons[0].id);
   useEffect(() => {
     dispatch(getAllSalesPersons());
   }, [dispatch]);
@@ -40,7 +40,7 @@ const SelectSalesPerson = ({ handleSalesPersonChange }) => {
   };
 
   const handleChange = (e) => {
-    const selectedOption = e.target.value;
+    const selectedOption = e.target.value || salesPersons[0];
     // console.log("SALESPERSON: ", selectedOption);
     handleSalesPersonChange(selectedOption);
   };
@@ -52,21 +52,20 @@ const SelectSalesPerson = ({ handleSalesPersonChange }) => {
           Atendentes
         </Typography>
         <NativeSelect
-          defaultValue={30}
+          className={styles.select}
+          // defaultValue={salesPersons}
+          // value={salesPersons[0].id}
           inputProps={{
             name: "salesPersonId",
             id: "uncontrolled-native",
           }}>
+          <option value='placeholder'>Selecione um vendedor</option>{" "}
+          {/* Placeholder */}
           {salesPersons.map((person) => (
             <option key={person.id} value={person.id}>
               {person.name}
             </option>
           ))}
-          {/* {options.map((option, index) => (
-            <option key={index} value={option}>
-              {formatOptions(option)}
-            </option>
-          ))} */}
         </NativeSelect>
       </FormControl>
     </div>
