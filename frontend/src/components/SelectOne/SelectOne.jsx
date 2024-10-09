@@ -33,6 +33,10 @@ const SelectOne = ({ handleLeadObjectionChange }) => {
     return "";
   };
 
+  // useEffect(() => {
+  //   handleLeadObjectionChange(objections[0]);
+  // }, [handleLeadObjectionChange, objections]);
+
   return (
     <div>
       <FormControl fullWidth onChange={handleChange}>
@@ -45,6 +49,10 @@ const SelectOne = ({ handleLeadObjectionChange }) => {
             name: "leadObjection",
             id: "uncontrolled-native",
           }}>
+          <option value='placeholder' disabled defaultValue>
+            Selecione a objeção
+          </option>
+
           {objections.map((option, index) => (
             <option key={index} value={option}>
               {formatOptions(option)}

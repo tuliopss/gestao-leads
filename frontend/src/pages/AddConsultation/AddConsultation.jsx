@@ -5,13 +5,13 @@ import {
   RadioGroup,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./AddConsultation.module.css";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "../../products/slices/products-slice";
-import { redirect, replace } from "react-router-dom";
+import { redirect, replace, useNavigate } from "react-router-dom";
 import { createLead } from "../../leads/slices/leads-slice";
 import SelectOne from "../../components/SelectOne/SelectOne";
 import {
@@ -25,6 +25,8 @@ import { DateTime } from "luxon";
 
 const AddConsultation = () => {
   const dispatch = useDispatch();
+  const animatedComponents = makeAnimated();
+  const navigate = useNavigate();
 
   const { products } = useSelector((state) => state.product);
   const { message, error, success } = useSelector((state) => state.message);
@@ -36,12 +38,11 @@ const AddConsultation = () => {
   const [localLead, setLocalLead] = useState({ name: "", whatsapp: "" });
   const [consultation, setConsultation] = useState({
     salesPersonId: "",
+    leadObjection: "INDECISO",
   });
-  const [leadObjection, setLeadObjection] = useState("INDECISO");
   const [date, setDate] = useState("");
   const [valuePaid, setValuePaid] = useState(0);
 
-  const animatedComponents = makeAnimated();
   const resetComponentMessage = useResetComponentMessage(dispatch);
 
   const handleLeadChange = (e) => {
@@ -56,7 +57,6 @@ const AddConsultation = () => {
 
   const handleSelectChange = (selectedOptions) => {
     const selectedIds = selectedOptions.map((segment) => {
-      console.log("PRODUTO", segment.idProduct); // Certifique-se de que idProduct é um UUID válido
       return segment.idProduct; // Retornando o valor direto
     });
 
@@ -125,11 +125,17 @@ const AddConsultation = () => {
         valuePaid: becameCustomer === false ? 0 : valuePaid,
       };
 
-      dispatch(createConsultation(updatedConsultation));
+      dispatch(createConsultation(updatedConsultation)).then((action) => {
+        if (action.meta.requestStatus === "fulfilled") {
+          console.log("action", action);
+          navigate("/roulette");
+        }
+      });
 
       return updatedConsultation;
     });
   };
+
   useEffect(() => {
     dispatch(getAllProducts());
     setConsultation({ ...consultation });
@@ -225,7 +231,7 @@ const AddConsultation = () => {
       {
         <form
           className={styles.formConsultationInfo}
-          // style={{ display: isHidden ? "block" : "none" }}
+          style={{ display: isHidden ? "block" : "none" }}
           onSubmit={handleConsultationSubmit}>
           <h3>Quais produtos o cliente está buscando?</h3>
           <Select
@@ -255,6 +261,7 @@ const AddConsultation = () => {
               name='seeAds'>
               <FormControlLabel
                 // Centraliza os botões de rádio
+                required
                 value={true}
                 control={<Radio />}
                 label='Sim'
@@ -266,6 +273,7 @@ const AddConsultation = () => {
                 value={false}
                 control={<Radio />}
                 label='Não'
+                required
                 labelPlacement='bottom'
                 onChange={handleSeeAdsChange}
               />
@@ -280,6 +288,7 @@ const AddConsultation = () => {
               name='becameCustomer'>
               <FormControlLabel
                 value={true}
+                required
                 control={<Radio />}
                 label='Sim'
                 labelPlacement='bottom'
@@ -288,6 +297,7 @@ const AddConsultation = () => {
 
               <FormControlLabel
                 value={false}
+                required
                 control={<Radio />}
                 label='Não'
                 labelPlacement='bottom'

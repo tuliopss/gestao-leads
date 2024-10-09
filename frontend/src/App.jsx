@@ -10,6 +10,7 @@ import SalesPersons from "./pages/SalesPersons/SalesPersons";
 import Leads from "./pages/Leads/Leads";
 import AddConsultation from "./pages/AddConsultation/AddConsultation";
 import Message from "./components/Message/Message";
+import Roulette from "./components/Roulette/Roulette";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path='/salesPersons' element={<SalesPersons />} />
         <Route path='/leads' element={<Leads />} />
         <Route path='/addConsultation' element={<AddConsultation />} />
+        <Route path='/roulette' element={<Roulette />} />
       </Routes>
       <Container />
       <Footer />

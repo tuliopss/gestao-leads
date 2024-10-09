@@ -1,4 +1,5 @@
 import {
+  ArrayMinSize,
   IsArray,
   isBoolean,
   IsBoolean,
@@ -8,6 +9,7 @@ import {
   isNumber,
   isUUID,
   IsUUID,
+  MinLength,
 } from 'class-validator';
 import { UUID } from 'crypto';
 import { Lead } from 'src/leads/entities/lead.entity';
@@ -33,6 +35,7 @@ export class CreateCustomerServiceDto {
   valuePaid?: number;
 
   @IsNotEmpty()
+  @ArrayMinSize(1)
   productSegmentsId: UUID[];
 
   productSegments: Product[];

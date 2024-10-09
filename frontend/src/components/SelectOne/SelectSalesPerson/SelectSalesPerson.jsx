@@ -59,7 +59,7 @@ const SelectSalesPerson = ({ handleSalesPersonChange }) => {
             name: "salesPersonId",
             id: "uncontrolled-native",
           }}>
-          <option value='placeholder'>Selecione um vendedor</option>{" "}
+          <option value='placeholder'>Selecione um vendedor</option>
           {/* Placeholder */}
           {salesPersons.map((person) => (
             <option key={person.id} value={person.id}>

@@ -8,6 +8,24 @@ span {
   text-align: center;
 }
 
+.formConsultation {
+  padding: 2em;
+  margin: 0 auto;
+}
+
+h2 {
+  margin-bottom: 0.5em;
+}
+
+.formConsultation input[type="text"] {
+  text-align: center;
+  font-size: 1rem;
+}
+
+.formConsultation input[type="text"]::placeholder {
+  font-size: 1rem;
+}
+
 .formConsultationContainer {
   margin: 0 auto;
   width: 50%;

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import consultationsService from "../services/consultation-service";
+import { setMessage } from "../../utils/global-messages-slices";
 
 const initialState = {
   consultation: {},
@@ -27,8 +28,19 @@ export const createConsultation = createAsyncThunk(
     const data = await consultationsService.createConsultation(consultation);
 
     if (data.error) {
-      return thunkAPI.rejectWithValue(data.error.message);
+      thunkAPI.dispatch(
+        setMessage({ message: data.message[0], error: true, success: false })
+      );
+      return thunkAPI.rejectWithValue(data.message[0]);
     }
+
+    thunkAPI.dispatch(
+      setMessage({
+        message: "Atendimento registrado com sucesso!",
+        error: false,
+        success: true,
+      })
+    );
     return data;
   }
 );
