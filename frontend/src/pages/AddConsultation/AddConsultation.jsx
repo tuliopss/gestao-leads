@@ -71,8 +71,11 @@ const AddConsultation = () => {
   };
 
   const handleLeadObjectionChange = (option) => {
+    if (becameCustomer) {
+      setConsultation({ ...consultation, leadObjection: "NENHUMA" });
+    }
+
     setConsultation({ ...consultation, leadObjection: option });
-    console.log("Componente pai: ", option);
   };
 
   const handleBecameCustomerChange = (e) => {
@@ -304,7 +307,10 @@ const AddConsultation = () => {
             />
           </label>
 
-          <SelectOne handleLeadObjectionChange={handleLeadObjectionChange} />
+          <div
+            className={becameCustomer === false ? "" : `${styles.hiddenField}`}>
+            <SelectOne handleLeadObjectionChange={handleLeadObjectionChange} />
+          </div>
           <SelectSalesPerson
             handleSalesPersonChange={handleSalesPersonChange}
           />
