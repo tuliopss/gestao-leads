@@ -15,16 +15,10 @@ const SelectOne = ({ handleLeadObjectionChange }) => {
     "PRECO",
   ];
 
-  const [selectedOption, setSelectedOption] = useState(objections[0]);
-
   const handleChange = (e) => {
-    setSelectedOption(e.target.value);
-    handleLeadObjectionChange(selectedOption); // Chama a função passada pelo pai com o valor selecionado
+    const selectedOption = e.target.value || objections[0];
+    handleLeadObjectionChange(selectedOption);
   };
-
-  useEffect(() => {
-    console.log("OBJECAO", selectedOption);
-  }, []);
 
   const formatOptions = (option) => {
     if (option && option.length > 0) {
@@ -38,6 +32,7 @@ const SelectOne = ({ handleLeadObjectionChange }) => {
 
     return "";
   };
+
   return (
     <div>
       <FormControl fullWidth onChange={handleChange}>
@@ -46,7 +41,6 @@ const SelectOne = ({ handleLeadObjectionChange }) => {
         </Typography>
         <NativeSelect
           className={styles.select}
-          defaultValue={objections[0]}
           inputProps={{
             name: "leadObjection",
             id: "uncontrolled-native",

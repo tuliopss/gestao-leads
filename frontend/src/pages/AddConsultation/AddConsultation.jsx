@@ -35,9 +35,9 @@ const AddConsultation = () => {
   const [seeAds, setSeeAds] = useState(false);
   const [localLead, setLocalLead] = useState({ name: "", whatsapp: "" });
   const [consultation, setConsultation] = useState({
-    leadObjection: "INDECISO",
     salesPersonId: "",
   });
+  const [leadObjection, setLeadObjection] = useState("INDECISO");
   const [date, setDate] = useState("");
   const [valuePaid, setValuePaid] = useState(0);
 
@@ -72,6 +72,7 @@ const AddConsultation = () => {
 
   const handleLeadObjectionChange = (option) => {
     setConsultation({ ...consultation, leadObjection: option });
+    console.log("Componente pai: ", option);
   };
 
   const handleBecameCustomerChange = (e) => {
