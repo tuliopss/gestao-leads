@@ -22,6 +22,7 @@ import SelectSalesPerson from "../../components/SelectOne/SelectSalesPerson/Sele
 import Message from "../../components/Message/Message";
 import { useResetComponentMessage } from "../../hooks/useResetComponentMessage";
 import { DateTime } from "luxon";
+import Roulette from "../../components/Roulette/Roulette";
 
 const AddConsultation = () => {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ const AddConsultation = () => {
   });
   const [date, setDate] = useState("");
   const [valuePaid, setValuePaid] = useState(0);
+  const [showRoulette, setShowRoulette] = useState(false);
 
   const resetComponentMessage = useResetComponentMessage(dispatch);
 
@@ -57,12 +59,12 @@ const AddConsultation = () => {
 
   const handleSelectChange = (selectedOptions) => {
     const selectedIds = selectedOptions.map((segment) => {
-      return segment.idProduct; // Retornando o valor direto
+      return segment.idProduct;
     });
 
     setConsultation({
       ...consultation,
-      productSegmentsId: selectedIds, // Agora você está passando um array de UUIDs
+      productSegmentsId: selectedIds,
     });
   };
 
@@ -126,9 +128,16 @@ const AddConsultation = () => {
       };
 
       dispatch(createConsultation(updatedConsultation)).then((action) => {
-        if (action.meta.requestStatus === "fulfilled") {
-          console.log("action", action);
-          navigate("/roulette");
+        if (
+          action.meta.requestStatus === "fulfilled" &&
+          action.payload.becameCustomer
+        ) {
+          setShowRoulette(true);
+        } else if (
+          action.meta.requestStatus === "fulfilled" &&
+          !action.payload.becameCustomer
+        ) {
+          navigate("/");
         }
       });
 
@@ -190,148 +199,153 @@ const AddConsultation = () => {
     <div className={styles.formConsultationContainer}>
       {error && <Message msg={message} type='error' />}
       {message && !error && success && <Message msg={message} type='success' />}
-
-      <form
-        onSubmit={handleLeadSubmit}
-        style={{ display: !isHidden ? "block" : "none" }}
-        className={styles.formConsultation}>
-        <h2>Informe os dados de atendimento</h2>
-        <label>
-          <span>Seu nome: </span>
-          <input
-            type='text'
-            placeholder='Digite seu nome...'
-            name='name'
-            onChange={handleLeadChange}
-            // required
-            // value={title || ""}w
-          />
-        </label>
-
-        <label>
-          <span>WhatsApp: </span>
-          <input
-            type='text'
-            name='whatsapp'
-            placeholder='Digite seu WhatsApp'
-            onChange={handleLeadChange}
-            // defaultValue={initialProduct.quantity}
-            // onChange={handleChange}
-          />
-        </label>
-
-        <Button
-          variant='contained'
-          style={{ backgroundColor: "#ff5b00" }}
-          type='submit'>
-          Enviar
-        </Button>
-      </form>
-
-      {
-        <form
-          className={styles.formConsultationInfo}
-          style={{ display: isHidden ? "block" : "none" }}
-          onSubmit={handleConsultationSubmit}>
-          <h3>Quais produtos o cliente está buscando?</h3>
-          <Select
-            className={styles.select}
-            closeMenuOnSelect={false}
-            components={animatedComponents}
-            defaultValue={[products[4], products[5]]}
-            isMulti
-            options={options}
-            onChange={handleSelectChange}
-            name='idProduct'
-          />
-
-          <h3>Data:</h3>
-          <input
-            type='date'
-            name='date'
-            id=''
-            onChange={(e) => setDate(e.target.value)}
-          />
-
-          <div className={styles.radioGroupContainer}>
-            <h3>Viu algum tipo de anúncio?</h3>
-            <RadioGroup
-              row
-              aria-labelledby='demo-row-radio-buttons-group-label'
-              name='seeAds'>
-              <FormControlLabel
-                // Centraliza os botões de rádio
-                required
-                value={true}
-                control={<Radio />}
-                label='Sim'
-                labelPlacement='bottom'
-                onChange={handleSeeAdsChange}
+      {!showRoulette ? (
+        <>
+          <form
+            onSubmit={handleLeadSubmit}
+            style={{ display: !isHidden ? "block" : "none" }}
+            className={styles.formConsultation}>
+            <h2>Informe os dados de atendimento</h2>
+            <label>
+              <span>Seu nome: </span>
+              <input
+                type='text'
+                placeholder='Digite seu nome...'
+                name='name'
+                onChange={handleLeadChange}
               />
+            </label>
 
-              <FormControlLabel
-                value={false}
-                control={<Radio />}
-                label='Não'
-                required
-                labelPlacement='bottom'
-                onChange={handleSeeAdsChange}
+            <label>
+              <span>WhatsApp: </span>
+              <input
+                type='text'
+                name='whatsapp'
+                placeholder='Digite seu WhatsApp'
+                onChange={handleLeadChange}
               />
-            </RadioGroup>
-          </div>
+            </label>
 
-          <div className={styles.radioGroupContainer}>
-            <h3>Se tornou cliente?</h3>
-            <RadioGroup
-              row
-              aria-labelledby='demo-row-radio-buttons-group-label'
-              name='becameCustomer'>
-              <FormControlLabel
-                value={true}
-                required
-                control={<Radio />}
-                label='Sim'
-                labelPlacement='bottom'
-                onChange={handleBecameCustomerChange}
-              />
+            <Button
+              variant='contained'
+              style={{ backgroundColor: "#ff5b00" }}
+              type='submit'>
+              Enviar
+            </Button>
+          </form>
 
-              <FormControlLabel
-                value={false}
-                required
-                control={<Radio />}
-                label='Não'
-                labelPlacement='bottom'
-                onChange={handleBecameCustomerChange}
-              />
-            </RadioGroup>
-          </div>
-
-          <label
-            className={becameCustomer === true ? "" : `${styles.hiddenField}`}>
-            <span>Valor da compra</span>
-            <input
-              type='number'
-              value={valuePaid}
-              name='valuePaid'
-              onChange={handleValuePaidChange}
+          <form
+            className={styles.formConsultationInfo}
+            style={{ display: isHidden ? "block" : "none" }}
+            onSubmit={handleConsultationSubmit}>
+            <h3>Quais produtos o cliente está buscando?</h3>
+            <Select
+              className={styles.select}
+              closeMenuOnSelect={false}
+              components={animatedComponents}
+              defaultValue={[products[4], products[5]]}
+              isMulti
+              options={options}
+              onChange={handleSelectChange}
+              name='idProduct'
             />
-          </label>
 
-          <div
-            className={becameCustomer === false ? "" : `${styles.hiddenField}`}>
-            <SelectOne handleLeadObjectionChange={handleLeadObjectionChange} />
-          </div>
-          <SelectSalesPerson
-            handleSalesPersonChange={handleSalesPersonChange}
-          />
-          <Button
-            variant='contained'
-            style={{ backgroundColor: "#ff5b00" }}
-            type='submit'>
-            Finalizar
-          </Button>
-        </form>
-      }
+            <h3>Data:</h3>
+            <input
+              type='date'
+              name='date'
+              onChange={(e) => setDate(e.target.value)}
+            />
+
+            <div className={styles.radioGroupContainer}>
+              <h3>Viu algum tipo de anúncio?</h3>
+              <RadioGroup
+                row
+                aria-labelledby='demo-row-radio-buttons-group-label'
+                name='seeAds'>
+                <FormControlLabel
+                  required
+                  value={true}
+                  control={<Radio />}
+                  label='Sim'
+                  labelPlacement='bottom'
+                  onChange={handleSeeAdsChange}
+                />
+
+                <FormControlLabel
+                  value={false}
+                  control={<Radio />}
+                  label='Não'
+                  required
+                  labelPlacement='bottom'
+                  onChange={handleSeeAdsChange}
+                />
+              </RadioGroup>
+            </div>
+
+            <div className={styles.radioGroupContainer}>
+              <h3>Se tornou cliente?</h3>
+              <RadioGroup
+                row
+                aria-labelledby='demo-row-radio-buttons-group-label'
+                name='becameCustomer'>
+                <FormControlLabel
+                  value={true}
+                  required
+                  control={<Radio />}
+                  label='Sim'
+                  labelPlacement='bottom'
+                  onChange={handleBecameCustomerChange}
+                />
+
+                <FormControlLabel
+                  value={false}
+                  required
+                  control={<Radio />}
+                  label='Não'
+                  labelPlacement='bottom'
+                  onChange={handleBecameCustomerChange}
+                />
+              </RadioGroup>
+            </div>
+
+            <label
+              className={
+                becameCustomer === true ? "" : `${styles.hiddenField}`
+              }>
+              <span>Valor da compra</span>
+              <input
+                type='number'
+                value={valuePaid}
+                name='valuePaid'
+                onChange={handleValuePaidChange}
+              />
+            </label>
+
+            <div
+              className={
+                becameCustomer === false ? "" : `${styles.hiddenField}`
+              }>
+              <SelectOne
+                handleLeadObjectionChange={handleLeadObjectionChange}
+              />
+            </div>
+            <SelectSalesPerson
+              handleSalesPersonChange={handleSalesPersonChange}
+            />
+            <Button
+              variant='contained'
+              style={{ backgroundColor: "#ff5b00" }}
+              type='submit'>
+              Finalizar
+            </Button>
+          </form>
+        </>
+      ) : (
+        <>
+          <Roulette />
+        </>
+      )}
     </div>
   );
 };

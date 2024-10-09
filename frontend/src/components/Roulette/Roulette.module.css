@@ -1,0 +1,14 @@
+.rouletteContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rouletteContainer button {
+  width: 400px;
+  font-size: 1.5em;
+}
+
+.rouletteContainer button:hover {
+  background-color: #c74b00;
+}
