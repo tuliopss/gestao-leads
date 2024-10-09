@@ -8,13 +8,13 @@ const Navbar = () => {
       </div>
       <ul>
         <li>
-          <Link to='/salespersons'>Atendentes</Link>
+          <Link to='/'>Atendimentos</Link>
         </li>
         <li>
           <Link to='/leads'>Leads</Link>
         </li>
         <li>
-          <Link to='/'>Atendimentos</Link>
+          <Link to='/salespersons'>Atendentes</Link>
         </li>
       </ul>
     </nav>

@@ -50,6 +50,9 @@ function Row(props) {
         <TableCell className={styles.row} align='right'>
           {row.email}
         </TableCell>
+        <TableCell className={styles.row} align='right'>
+          {row.conversionRate}%
+        </TableCell>
         <TableCell id={styles.leadRow} className={styles.row} align='right'>
           {row.leads ? row.leads.length : 0}
         </TableCell>
@@ -66,7 +69,6 @@ function Row(props) {
                   <TableRow>
                     <TableCell>Data</TableCell>
                     <TableCell>Lead</TableCell>
-
                     <TableCell align='right'>Valor da venda (R$)</TableCell>
                   </TableRow>
                 </TableHead>
@@ -82,10 +84,6 @@ function Row(props) {
                           <TableCell align='right'>
                             {historyRow.valuePaid}
                           </TableCell>
-                          {/* <TableCell align='right'>
-        {Math.round(historyRow.amount * row.price * 100) /
-          100}
-      </TableCell> */}
                         </TableRow>
                       );
                     })
@@ -109,14 +107,15 @@ Row.propTypes = {
   }).isRequired,
 };
 
-export default function CollapsibleTable() {
+export default function SalesPersonTable() {
   const { salesPersons } = useSelector((state) => state.salesPerson);
   const dispatch = useDispatch();
-  function createData(name, email, leads, customerServices) {
+  function createData(name, email, leads, conversionRate, customerServices) {
     return {
       name,
       email,
       leads,
+      conversionRate,
       customerServices,
     };
   }
@@ -126,8 +125,8 @@ export default function CollapsibleTable() {
   }, [dispatch]);
 
   const rows = salesPersons.map((person) => {
-    const { name, email, leads, customerServices } = person;
-    return createData(name, email, leads, customerServices);
+    const { name, email, leads, conversionRate, customerServices } = person;
+    return createData(name, email, leads, conversionRate, customerServices);
   });
   return (
     <TableContainer component={Paper} id='tableContainer'>
@@ -138,6 +137,9 @@ export default function CollapsibleTable() {
             <TableCell>Nome</TableCell>
             <TableCell className={styles.headCell} align='right'>
               Email
+            </TableCell>
+            <TableCell className={styles.headCell} align='right'>
+              Percentual de conversão
             </TableCell>
             <TableCell id={styles.headLeadCell} align='right'>
               Leads&nbsp;

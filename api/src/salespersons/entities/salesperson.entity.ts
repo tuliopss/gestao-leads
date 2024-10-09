@@ -26,6 +26,9 @@ export class SalesPerson {
   @OneToMany(() => Lead, (lead) => lead.salesPerson)
   leads: Lead[];
 
+  @Column('float', { nullable: true })
+  conversionRate: number;
+
   @OneToMany(
     () => CustomerService,
     (customerService) => customerService.salesPerson,

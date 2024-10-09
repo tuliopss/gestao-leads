@@ -10,6 +10,7 @@ const SalesPersons = () => {
   return (
     <div>
       <header className={styles.homeHeader}>
+        <h2>Atendentes: </h2>
         <ModalAddSalesPerson />
       </header>
 

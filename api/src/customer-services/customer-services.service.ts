@@ -65,6 +65,8 @@ export class CustomerServicesService {
         lead.id,
       );
 
+      await this.salesPersonService.calcPercentConvertSales(salesPerson.id);
+
       return await this.serviceRepository.save(attendace);
     } catch (error) {
       throw new BadRequestException(error.message);

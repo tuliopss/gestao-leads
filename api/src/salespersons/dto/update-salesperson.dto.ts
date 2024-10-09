@@ -5,4 +5,5 @@ export class UpdateSalespersonDto extends PartialType(CreateSalespersonDto) {
   name: string;
   email: string;
   password: string;
+  conversionRate: number;
 }

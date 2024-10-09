@@ -22,7 +22,7 @@ const Home = () => {
 
         <Link to='/addConsultation'>
           <Button variant='contained' color='success'>
-            Criar novo atendentimento
+            Registrar novo atendimento
           </Button>
         </Link>
       </header>

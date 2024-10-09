@@ -89,8 +89,29 @@ export class SalespersonsService {
       const salesPerson = await this.findSalesPersonByIdOne(salesPersonId);
       const lead = await this.leadService.findLeadById(leadId);
       salesPerson.leads.push(lead);
-      // console.log(salesPersonId, leadId);
+
       await this.salesPersonRepository.save(salesPerson);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  async calcPercentConvertSales(salesPersonId: UUID) {
+    try {
+      const salesPerson = await this.findSalesPersonByIdOne(salesPersonId);
+      const consultations = salesPerson.customerServices.length;
+
+      let count = 0;
+      for (let i = 0; i < salesPerson.customerServices.length; i++) {
+        if (salesPerson.customerServices[i].becameCustomer) {
+          count++;
+        }
+      }
+
+      const percentRate = (count / consultations) * 100;
+      salesPerson.conversionRate = percentRate;
+
+      return await this.salesPersonRepository.save(salesPerson);
     } catch (error) {
       throw new BadRequestException(error.message);
     }
