@@ -139,7 +139,7 @@ export default function SalesPersonTable() {
               Email
             </TableCell>
             <TableCell className={styles.headCell} align='right'>
-              Percentual de conversão
+              Percentual de conversão de atendimentos
             </TableCell>
             <TableCell id={styles.headLeadCell} align='right'>
               Leads&nbsp;

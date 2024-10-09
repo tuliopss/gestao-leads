@@ -18,30 +18,31 @@ import { Product } from 'src/products/entities/product.entity';
 import { SalesPerson } from 'src/salespersons/entities/salesperson.entity';
 
 export class CreateCustomerServiceDto {
-  @IsNotEmpty()
-  @IsDateString()
+  @IsNotEmpty({ message: 'Informe a data.' })
+  @IsDateString({}, { message: 'Informe uma data válida' })
   date: Date;
 
-  @IsNotEmpty()
-  @IsBoolean()
+  @IsNotEmpty({ message: 'Informe se o Lead viu algum anúncio' })
+  @IsBoolean({ message: 'Informe se sim ou não' })
   seeAds: boolean;
 
-  @IsBoolean()
+  @IsBoolean({ message: 'Informe se sim ou não' })
+  @IsNotEmpty({ message: 'Informe se virou cliente' })
   becameCustomer: boolean;
 
   leadObjection: LeadObjections;
 
-  @IsNumber()
+  @IsNumber({}, { message: 'Informe o valor em número' })
   valuePaid?: number;
 
-  @IsNotEmpty()
-  @ArrayMinSize(1)
+  @IsNotEmpty({ message: 'Informe os segmentos de produto interessados' })
+  @ArrayMinSize(1, { message: 'Informe no mínimo 1 segmento' })
   productSegmentsId: UUID[];
 
   productSegments: Product[];
 
-  @IsNotEmpty()
-  @IsUUID()
+  @IsNotEmpty({ message: 'Informe o atendente' })
+  @IsUUID('all', { message: 'Informe um atendente válido' })
   salesPersonId: UUID;
 
   salesPerson: SalesPerson;
