@@ -1,0 +1,91 @@
+.consultationDetailsContainer {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.consultationHeader {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.headerTitle {
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.headerDate {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.consultationInfo {
+  margin-bottom: 20px;
+}
+
+.productsList {
+  list-style-type: none;
+  padding: 0;
+  margin: 1em 0 2em 0;
+}
+
+.consultationLead {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  /* margin-top: 20px; */
+  width: 30%;
+  margin: 1em 0 2em 0;
+}
+
+.leadTitle {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.leadDetails p {
+  margin: 4px 0;
+}
+
+.leadDetails strong {
+  color: #555;
+}
+
+.productsList li {
+  background-color: #ececec;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  width: 30%;
+}
+
+.consultationMetrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.metricItem {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.metricItem p {
+  margin: 5px 0 0;
+  font-size: 1.1rem;
+  color: #444;
+}
+
+.metricItem strong {
+  display: block;
+  font-size: 1.2rem;
+  color: #222;
+}

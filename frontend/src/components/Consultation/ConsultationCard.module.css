@@ -25,6 +25,14 @@
   align-items: center;
 }
 
+.cardActions button {
+  color: #fff;
+  background-color: #ff5b00;
+}
+.cardActions button:hover {
+  background-color: #c74b00;
+}
+
 /* .productActions svg {
   margin: 0.3em;
   cursor: pointer;

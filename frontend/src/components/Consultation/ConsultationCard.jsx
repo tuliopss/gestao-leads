@@ -46,6 +46,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { Link } from "react-router-dom";
 
 const bull = (
   <Box
@@ -96,8 +97,10 @@ export default function BasicCard({ consultation }) {
           {consultation.becameCustomer ? <span>Sim</span> : <span>Não</span>}
         </Typography>
       </CardContent>
-      <CardActions>
-        <Button size='small'>Learn More</Button>
+      <CardActions className={styles.cardActions}>
+        <Link to={`consultation/${consultation.id}`}>
+          <Button size='small'>Ver mais</Button>
+        </Link>
       </CardActions>
     </Card>
   );
