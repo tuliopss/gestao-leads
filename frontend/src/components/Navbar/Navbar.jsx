@@ -4,7 +4,9 @@ const Navbar = () => {
   return (
     <nav className={styles.navbar}>
       <div className={styles.navbar_logo}>
-        <Link to='/'>{/* <img src='/logo.png' alt='logo-turbo' /> */}</Link>
+        <Link to='/'>
+          <img className={styles.logoVai} src='/logoVAI.jpg' alt='logo-turbo' />
+        </Link>
       </div>
       <ul>
         <li>

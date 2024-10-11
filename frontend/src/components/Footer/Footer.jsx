@@ -4,7 +4,8 @@ const Footer = () => {
   return (
     <footer className={styles.footer}>
       <p>
-        <span className='bold'>Gestão Leads VAI</span> &copy; 2024
+        <span className='bold'>Gestão Leads VAI </span>
+        &copy; 2024
       </p>
     </footer>
   );

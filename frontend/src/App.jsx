@@ -17,17 +17,17 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar />
-
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/salesPersons' element={<SalesPersons />} />
-        <Route path='/leads' element={<Leads />} />
-        <Route path='/addConsultation' element={<AddConsultation />} />
-        <Route path='/roulette' element={<Roulette />} />
-        <Route path='/consultation/:id' element={<ConsultationDetails />} />
-        <Route path='*' element={<p>There's nothing here: 404!</p>} />
-      </Routes>
-      <Container />
+      <Container>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/salesPersons' element={<SalesPersons />} />
+          <Route path='/leads' element={<Leads />} />
+          <Route path='/addConsultation' element={<AddConsultation />} />
+          <Route path='/roulette' element={<Roulette />} />
+          <Route path='/consultation/:id' element={<ConsultationDetails />} />
+          <Route path='*' element={<p>There's nothing here: 404!</p>} />
+        </Routes>
+      </Container>
       <Footer />
     </BrowserRouter>
   );

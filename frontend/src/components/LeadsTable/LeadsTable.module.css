@@ -1,8 +1,46 @@
-.tableCell {
-  /* padding-right: 50px; */
-  /* background-color: red; */
+/* .tableCell {
+  padding-right: 50px;
+  background-color: red;
 }
 
 #headLeadCell {
-  /* padding-right: 40px; */
+  padding-right: 40px;
+} */
+/* Centraliza a paginação */
+.paginationContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Estiliza os botões de paginação */
+.paginationButton {
+  background-color: #ff5b00;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  margin: 0 5px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover para os botões */
+.paginationButton:hover {
+  background-color: #1565c0;
+}
+
+/* Botões desativados */
+.paginationButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Informações de paginação (número da página) */
+.paginationInfo {
+  margin: 0 10px;
+  font-size: 16px;
+  font-weight: bold;
 }

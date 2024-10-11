@@ -104,12 +104,13 @@ export class SalespersonsService {
       let count = 0;
       for (let i = 0; i < salesPerson.customerServices.length; i++) {
         if (salesPerson.customerServices[i].becameCustomer) {
+          console.log(salesPerson.customerServices[i].becameCustomer);
           count++;
         }
       }
 
       const percentRate = (count / consultations) * 100;
-      salesPerson.conversionRate = percentRate;
+      salesPerson.conversionRate = parseFloat(percentRate.toFixed(1));
 
       return await this.salesPersonRepository.save(salesPerson);
     } catch (error) {
