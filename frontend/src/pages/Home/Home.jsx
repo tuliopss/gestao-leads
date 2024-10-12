@@ -6,15 +6,17 @@ import styles from "./Home.module.css";
 import { getAllConsultations } from "../../customer-services/slices/consultation-slice";
 import ConsultationCard from "../../components/Consultation/ConsultationCard";
 import { Link } from "react-router-dom";
+import LoadingComponent from "../../components/Loading/LoadingComponent";
 const Home = () => {
   const dispatch = useDispatch();
-  const { consultations } = useSelector((state) => state.consultation);
+  const { consultations, loading } = useSelector((state) => state.consultation);
 
   useEffect(() => {
     dispatch(getAllConsultations());
     console.log(consultations);
   }, [dispatch]);
 
+  if (loading) return <LoadingComponent />;
   return (
     <div>
       <header className={styles.homeHeader}>

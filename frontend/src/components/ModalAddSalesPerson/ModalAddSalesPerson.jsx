@@ -66,9 +66,6 @@ export default function ModalAddSalesPerson() {
         <Button variant='contained' color='success' onClick={handleOpen}>
           Registrar novo atendente
         </Button>
-
-        {error && message && <Message msg={message} type='error' />}
-        {message && !error && <Message msg={message} type='success' />}
       </header>
 
       <Modal

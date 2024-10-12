@@ -21,13 +21,19 @@ export class SalespersonsService {
 
   async create(createSalespersonDto: CreateSalespersonDto) {
     try {
+      const checkEmail = await this.salesPersonRepository.findOne({
+        where: { email: createSalespersonDto.email },
+      });
+
+      if (checkEmail) throw new BadRequestException(`Email já registrado`);
+
       return await this.salesPersonRepository.save(createSalespersonDto);
     } catch (error) {
       throw new BadRequestException(error.message);
     }
   }
 
-  async findAll(): Promise<SalesPerson[]> {
+  async getAllSalesPersons(): Promise<SalesPerson[]> {
     try {
       const salespersons = await this.salesPersonRepository.find({
         relations: ['customerServices', 'leads', 'customerServices.lead'],
@@ -44,7 +50,7 @@ export class SalespersonsService {
     }
   }
 
-  async findSalesPersonByIdOne(id: UUID): Promise<SalesPerson> {
+  async findSalesPersonById(id: UUID): Promise<SalesPerson> {
     try {
       const salesperson = await this.salesPersonRepository.findOne({
         where: { id: id },
@@ -62,7 +68,7 @@ export class SalespersonsService {
 
   async update(id: UUID, updateSalespersonDto: UpdateSalespersonDto) {
     try {
-      await this.findSalesPersonByIdOne(id);
+      await this.findSalesPersonById(id);
 
       await this.salesPersonRepository.update(id, updateSalespersonDto);
 
@@ -74,7 +80,7 @@ export class SalespersonsService {
 
   async deleteSalesPerson(id: UUID) {
     try {
-      await this.findSalesPersonByIdOne(id);
+      await this.findSalesPersonById(id);
 
       await this.salesPersonRepository.delete(id);
 
@@ -86,7 +92,7 @@ export class SalespersonsService {
 
   async linkLeadToSalePerson(salesPersonId: UUID, leadId: UUID) {
     try {
-      const salesPerson = await this.findSalesPersonByIdOne(salesPersonId);
+      const salesPerson = await this.findSalesPersonById(salesPersonId);
       const lead = await this.leadService.findLeadById(leadId);
       salesPerson.leads.push(lead);
 
@@ -98,7 +104,7 @@ export class SalespersonsService {
 
   async calcPercentConvertSales(salesPersonId: UUID) {
     try {
-      const salesPerson = await this.findSalesPersonByIdOne(salesPersonId);
+      const salesPerson = await this.findSalesPersonById(salesPersonId);
       const consultations = salesPerson.customerServices.length;
 
       let count = 0;

@@ -28,8 +28,11 @@ export const registerSalesPerson = createAsyncThunk(
       const data = await salesPersonService.registerSalesPerson(salesPerson);
 
       if (data.error) {
+        const errorMessage = Array.isArray(data.message)
+          ? data.message[0]
+          : data.message;
         thunkAPI.dispatch(
-          setMessage({ message: data.message[0], error: true, success: false })
+          setMessage({ message: errorMessage, error: true, success: false })
         );
         return thunkAPI.rejectWithValue(data.message[0]);
       }

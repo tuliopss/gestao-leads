@@ -207,10 +207,10 @@ const AddConsultation = () => {
             className={styles.formConsultation}>
             <h2>Informe os dados de atendimento</h2>
             <label>
-              <span>Seu nome: </span>
+              <span>Nome da lead: </span>
               <input
                 type='text'
-                placeholder='Digite seu nome...'
+                placeholder='Digite o nome da lead...'
                 name='name'
                 onChange={handleLeadChange}
               />
@@ -222,6 +222,16 @@ const AddConsultation = () => {
                 type='text'
                 name='whatsapp'
                 placeholder='Digite seu WhatsApp'
+                onChange={handleLeadChange}
+              />
+            </label>
+
+            <label>
+              <span>CPF/CNPJ: </span>
+              <input
+                type='text'
+                name='cpfOrCnpj'
+                placeholder='Digite seu CPF ou CNPJ'
                 onChange={handleLeadChange}
               />
             </label>

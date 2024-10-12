@@ -47,6 +47,7 @@ import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
+import formats from "../../utils/formats";
 
 const bull = (
   <Box
@@ -56,18 +57,18 @@ const bull = (
   </Box>
 );
 
-const formatDate = (date) => {
-  const newDate = new Date(date);
+// const formatDate = (date) => {
+//   const newDate = new Date(date);
 
-  const day = newDate.getDate() + 1;
-  const month = newDate.getMonth() + 1;
-  const year = newDate.getFullYear();
+//   const day = newDate.getDate() + 1;
+//   const month = newDate.getMonth() + 1;
+//   const year = newDate.getFullYear();
 
-  const formattedDay = day < 10 ? "0" + day : day;
-  const formattedMonth = month < 10 ? "0" + month : month;
+//   const formattedDay = day < 10 ? "0" + day : day;
+//   const formattedMonth = month < 10 ? "0" + month : month;
 
-  return `${formattedDay}/${formattedMonth}/${year}`;
-};
+//   return `${formattedDay}/${formattedMonth}/${year}`;
+// };
 
 export default function BasicCard({ consultation }) {
   return (
@@ -80,7 +81,7 @@ export default function BasicCard({ consultation }) {
       // }
       >
         <Typography gutterBottom sx={{ color: "text.secondary", fontSize: 15 }}>
-          Data do atendimento: {formatDate(consultation.date)}
+          Data do atendimento: {formats.formatDate(consultation.date)}
         </Typography>
         <Typography variant='h7' component='div'>
           {/* Atendente: {consultation.salesPerson.name} */}

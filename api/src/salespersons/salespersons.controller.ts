@@ -26,12 +26,12 @@ export class SalespersonsController {
 
   @Get()
   findAll() {
-    return this.salespersonsService.findAll();
+    return this.salespersonsService.getAllSalesPersons();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: UUID) {
-    return this.salespersonsService.findSalesPersonByIdOne(id);
+  findSalesPersonById(@Param('id') id: UUID) {
+    return this.salespersonsService.findSalesPersonById(id);
   }
 
   @Patch(':id')

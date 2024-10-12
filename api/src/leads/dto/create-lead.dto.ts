@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, MaxLength } from 'class-validator';
 
 export class CreateLeadDto {
   @IsNotEmpty({ message: 'Insira um nome.' })
@@ -6,6 +6,8 @@ export class CreateLeadDto {
 
   @IsNotEmpty({ message: 'Informe o número de WhatsApp' })
   whatsapp: string;
-  seeAds: Boolean;
-  becameCustomer: Boolean;
+
+  @IsNotEmpty({ message: 'Informe o número de CPF/CNPJ' })
+  @MaxLength(14, { message: 'Insira um CPF/CNPJ válido' })
+  cpfOrCnpj: string;
 }

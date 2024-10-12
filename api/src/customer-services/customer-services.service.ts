@@ -33,7 +33,7 @@ export class CustomerServicesService {
       const lead = await this.leadService.findLeadById(
         createCustomerServiceDto.leadId,
       );
-      const salesPerson = await this.salesPersonService.findSalesPersonByIdOne(
+      const salesPerson = await this.salesPersonService.findSalesPersonById(
         createCustomerServiceDto.salesPersonId,
       );
 

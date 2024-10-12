@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { getConsultationById } from "../../customer-services/slices/consultation-slice";
 import styles from "./ConsultationDetails.module.css";
 import formats from "../../utils/formats";
+import LoadingComponent from "../../components/Loading/LoadingComponent";
 const ConsultationDetails = () => {
   const dispatch = useDispatch();
   const { consultation, loading } = useSelector((state) => state.consultation);
@@ -17,7 +18,7 @@ const ConsultationDetails = () => {
     console.log(consultation);
   }, [dispatch]);
 
-  if (loading || !consultation.salesPerson) return <p>Loading...</p>;
+  if (loading || !consultation.salesPerson) return <LoadingComponent />;
 
   // return (
   //   <div className={styles.consultationDetailsContainer}>

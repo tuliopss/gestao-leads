@@ -25,22 +25,17 @@ export class LeadsController {
   }
 
   @Get()
-  findAll() {
-    return this.leadsService.findAll();
+  getAllLeads() {
+    return this.leadsService.getAllLeads();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: UUID) {
+  findLeadById(@Param('id') id: UUID) {
     return this.leadsService.findLeadById(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateLeadDto: UpdateLeadDto) {
     return this.leadsService.update(+id, updateLeadDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.leadsService.remove(+id);
   }
 }

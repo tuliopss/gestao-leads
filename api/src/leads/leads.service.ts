@@ -23,9 +23,11 @@ export class LeadsService {
     }
   }
 
-  async findAll(): Promise<Lead[]> {
+  async getAllLeads(): Promise<Lead[]> {
     try {
-      const leads = await this.leadRepository.find();
+      const leads = await this.leadRepository.find({
+        relations: ['customerService'],
+      });
       if (leads.length === 0) {
         throw new NotFoundException(
           'Não foram encontrados atendimentos registrados...',
@@ -39,7 +41,10 @@ export class LeadsService {
 
   async findLeadById(id: UUID): Promise<Lead> {
     try {
-      const lead = await this.leadRepository.findOne({ where: { id } });
+      const lead = await this.leadRepository.findOne({
+        where: { id },
+        relations: ['customerService'],
+      });
       if (!lead) {
         throw new NotFoundException('Lead não encontrado...');
       }
@@ -51,9 +56,5 @@ export class LeadsService {
 
   update(id: number, updateLeadDto: UpdateLeadDto) {
     return `This action updates a #${id} lead`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} lead`;
   }
 }

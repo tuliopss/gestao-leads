@@ -17,6 +17,7 @@ import { getAllLeads } from "../../leads/slices/leads-slice";
 import styles from "./LeadsTable.module.css";
 import { useState } from "react";
 import { useEffect } from "react";
+import LoadingComponent from "../Loading/LoadingComponent";
 
 function Row(props) {
   const { row } = props;
@@ -30,6 +31,9 @@ function Row(props) {
         </TableCell>
         <TableCell className={styles.row} align='right'>
           {row.whatsapp}
+        </TableCell>
+        <TableCell className={styles.row} align='right'>
+          {row.cpfOrCnpj}
         </TableCell>
       </TableRow>
       <TableRow></TableRow>
@@ -45,7 +49,7 @@ Row.propTypes = {
 };
 
 export default function LeadsTable() {
-  const { leads } = useSelector((state) => state.lead);
+  const { leads, loading } = useSelector((state) => state.lead);
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
   const leadsPerPage = 8;
@@ -61,8 +65,8 @@ export default function LeadsTable() {
   const totalPages = Math.ceil(leads.length / leadsPerPage);
 
   // Função para criar os dados das linhas da tabela
-  function createData(name, whatsapp) {
-    return { name, whatsapp };
+  function createData(name, whatsapp, cpfOrCnpj) {
+    return { name, whatsapp, cpfOrCnpj };
   }
 
   // Efeito para buscar os leads apenas uma vez ao carregar o componente
@@ -73,9 +77,11 @@ export default function LeadsTable() {
   }, [dispatch, leads.length]);
 
   const rows = currentLeads.map((lead) => {
-    const { name, whatsapp } = lead;
-    return createData(name, whatsapp);
+    const { name, whatsapp, cpfOrCnpj } = lead;
+    return createData(name, whatsapp, cpfOrCnpj);
   });
+
+  if (loading) return <LoadingComponent />;
 
   return (
     <TableContainer component={Paper} id='tableContainer'>
@@ -85,6 +91,7 @@ export default function LeadsTable() {
             <TableCell />
             <TableCell>Nome</TableCell>
             <TableCell align='right'>WhatsApp</TableCell>
+            <TableCell align='right'>CPF / CNPJ</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>

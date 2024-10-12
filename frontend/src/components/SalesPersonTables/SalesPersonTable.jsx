@@ -18,6 +18,7 @@ import { getAllSalesPersons } from "../../salespersons/slices/salesperson-slice"
 import { getAllConsultations } from "../../customer-services/slices/consultation-slice";
 
 import styles from "./SalesPersonTable.module.css";
+import LoadingComponent from "../Loading/LoadingComponent";
 
 const formatDate = (date) => {
   const newDate = new Date(date);
@@ -108,7 +109,7 @@ Row.propTypes = {
 };
 
 export default function SalesPersonTable() {
-  const { salesPersons } = useSelector((state) => state.salesPerson);
+  const { salesPersons, loading } = useSelector((state) => state.salesPerson);
   const dispatch = useDispatch();
   function createData(name, email, leads, conversionRate, customerServices) {
     return {
@@ -128,6 +129,9 @@ export default function SalesPersonTable() {
     const { name, email, leads, conversionRate, customerServices } = person;
     return createData(name, email, leads, conversionRate, customerServices);
   });
+
+  if (loading) return <LoadingComponent />;
+
   return (
     <TableContainer component={Paper} id='tableContainer'>
       <Table aria-label='collapsible table'>
